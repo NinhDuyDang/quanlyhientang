@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/main-layout :: layout(~{:: .main-content-block}, 'Dashboard', ~{:: .page-css}, ~{:: .page-js})}">
+<head>
+    <th:block class="page-css">
+        <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+    </th:block>
+</head>
+<body>
+
+<div class="main-content-block">
+
+    <div class="row g-3">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-primary" id="text-totalCases" th:text="${totalCases}">0</h2>
+                <span>Tổng số ca</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-warning" id="text-riskCases" th:text="${riskCases}">0</h2>
+                <span>Nguy cơ</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-success" id="text-confirmedCases" th:text="${confirmedCases}">0</h2>
+                <span>Xác nhận</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-danger" id="text-notEligibleCases" th:text="${notEligibleCases}">0</h2>
+                <span>Không đủ</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card p-3 chart-container">
+                <h6>Xu hướng ca bệnh theo tháng</h6>
+                <canvas id="lineChart" height="250"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card p-3 chart-container">
+                <h6>Số ca theo bệnh viện</h6>
+                <canvas id="barChart" height="250"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-lg-6">
+            <div class="card p-3 chart-container">
+                <h6>Tỷ lệ trạng thái</h6>
+                <canvas id="pieChart" height="250"></canvas>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card p-3 chart-container">
+                <h6>Bộ lọc dữ liệu</h6>
+                <form id="filterForm">
+                    <select class="form-select mb-2" id="hospital">
+                        <option value="">Tất cả bệnh viện</option>
+                        <option th:each="h : ${hospitals}" th:value="${h.id}" th:text="${h.name}"></option>
+                    </select>
+                    <select class="form-select mb-2" id="status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="BRAIN_DEATH_RISK">Nguy cơ chết não</option>
+                        <option value="CONFIRMED_BRAIN_DEATH">Xác nhận chết não</option>
+                        <option value="NOT_ELIGIBLE">Không đủ điều kiện</option>
+                    </select>
+                    <div class="row">
+                        <div class="col"><input type="date" class="form-control" id="fromDate"></div>
+                        <div class="col"><input type="date" class="form-control" id="toDate"></div>
+                    </div>
+                    <button type="button" class="btn btn-primary mt-3 w-100" onclick="applyFilter()">Lọc dữ liệu</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block class="page-js">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        // 1. Khởi tạo các biểu đồ toàn cục
+        let lineChart, barChart, pieChart;
+
+        // 2. Dữ liệu ban đầu từ Controller
+        const initLabels = /*[[${hospitalLabels}]]*/ [];
+        const initValues = /*[[${hospitalValues}]]*/ [];
+        const initStatus = /*[[${statusPieMap}]]*/ {};
+
+        document.addEventListener("DOMContentLoaded", function() {
+            // Biểu đồ Cột (Bệnh viện)
+            barChart = new Chart(document.getElementById('barChart'), {
+                type: 'bar',
+                data: { labels: initLabels, datasets: [{ label: 'Số ca', data: initValues, backgroundColor: '#4e73df' }] }
+            });
+
+            // Biểu đồ Tròn (Trạng thái)
+            pieChart = new Chart(document.getElementById('pieChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(initStatus),
+                    datasets: [{ data: Object.values(initStatus), backgroundColor: ['#f6c23e', '#e74a3b', '#858796'] }]
+                }
+            });
+        });
+
+        // 3. Hàm gọi API Filter
+        function applyFilter() {
+            const params = new URLSearchParams({
+                hospitalId: document.getElementById('hospital').value,
+                status: document.getElementById('status').value,
+                fromDate: document.getElementById('fromDate').value,
+                toDate: document.getElementById('toDate').value
+            });
+
+            fetch('/api/dashboard/filter?' + params.toString())
+                .then(res => res.json())
+                .then(data => {
+                    // Update Text
+                    document.getElementById('text-totalCases').innerText = data.totalCases;
+                    document.getElementById('text-riskCases').innerText = data.riskCases;
+                    document.getElementById('text-confirmedCases').innerText = data.confirmedCases;
+                    document.getElementById('text-notEligibleCases').innerText = data.notEligibleCases;
+
+                    // Update Charts
+                    barChart.data.labels = data.hospitalLabels;
+                    barChart.data.datasets[0].data = data.hospitalValues;
+                    barChart.update();
+
+                    pieChart.data.labels = Object.keys(data.statusMap);
+                    pieChart.data.datasets[0].data = Object.values(data.statusMap);
+                    pieChart.update();
+                });
+        }
+        /*]]>*/
+    </script>
+</th:block>
+
+</body>
+</html>

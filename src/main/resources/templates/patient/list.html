@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)"
+      th:replace="~{fragments/main-layout :: layout(~{:: .patient-content-block}, 'Danh sách ca bệnh', ~{:: .page-css}, ~{})}">
+<head>
+    <th:block class="page-css">
+        <link rel="stylesheet" th:href="@{/css/patient.css}">
+    </th:block>
+</head>
+<body>
+
+<div class="patient-content-block">
+
+    <div class="filter-container mb-4 mt-2">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <div class="filter-label">Bệnh viện</div>
+                <select class="form-select form-control-custom">
+                    <option>Tất cả</option>
+                    <option>Bệnh viện Bạch Mai</option>
+                    <option>Bệnh viện Chợ Rẫy</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <div class="filter-label">Trạng thái</div>
+                <select class="form-select form-control-custom">
+                    <option>Tất cả</option>
+                    <option>Nguy cơ chết não</option>
+                    <option>Xác nhận chết não</option>
+                    <option>Không đủ điều kiện</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <div class="filter-label">Từ ngày</div>
+                <input type="text" class="form-control form-control-custom" placeholder="01/01/2024">
+            </div>
+            <div class="col-md-2">
+                <div class="filter-label">Đến ngày</div>
+                <input type="text" class="form-control form-control-custom" placeholder="30/06/2024">
+            </div>
+            <div class="col-md-2">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" class="form-control border-start-0" placeholder="Tìm kiếm mã ca...">
+                </div>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button class="btn btn-primary w-100" style="padding: 9px;">Tìm kiếm</button>
+                <a th:href="@{/patient/create}" class="btn btn-success d-flex align-items-center justify-content-center px-3" title="Thêm ca bệnh">
+                    <i class="bi bi-plus-lg"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card patient-card">
+        <div class="table-responsive">
+            <table class="table table-custom mb-0">
+                <thead>
+                <tr>
+                    <th>Mã ca bệnh</th>
+                    <th>Bệnh viện</th>
+                    <th>Tuổi</th>
+                    <th>Giới tính</th>
+                    <th>Nguyên nhân</th>
+                    <th>Trạng thái</th>
+                    <th>Khả năng hiến</th>
+                    <th>Ngày nhập</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pt : ${patients}">
+                    <td class="fw-bold text-secondary" th:text="${pt.maCaBenh}">CA2024060001</td>
+                    <td th:text="${pt.benhVien}">Bệnh viện Bạch Mai</td>
+                    <td th:text="${pt.tuoi}">45</td>
+                    <td th:text="${pt.gioiTinh}">Nam</td>
+                    <td th:text="${pt.nguyenNhan}">Tai nạn</td>
+                    <td>
+                                <span class="badge-status"
+                                      th:classappend="${pt.trangThai == 'Nguy cơ chết não' ? 'status-risk' : (pt.trangThai == 'Xác nhận chết não' ? 'status-confirmed' : 'status-rejected')}"
+                                      th:text="${pt.trangThai}">
+                                    Nguy cơ chết não
+                                </span>
+                    </td>
+                    <td th:text="${pt.khaNangHien}">Có</td>
+                    <td th:text="${pt.ngayNhap}">10/06/2024</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a th:href="@{/patient/edit/{id}(id=${pt.maCaBenh})}" class="btn-action-edit text-decoration-none" title="Sửa ca bệnh">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <button class="btn-action-delete" th:data-id="${pt.maCaBenh}" onclick="confirmDelete(this)" title="Xóa ca bệnh">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function confirmDelete(button) {
+        const id = button.getAttribute('data-id');
+        if (confirm(`Bạn có chắc chắn muốn xóa ca bệnh có mã: ${id} không?`)) {
+            alert('Đã giả lập gửi yêu cầu xóa ca bệnh: ' + id);
+        }
+    }
+</script>
+</body>
+</html>

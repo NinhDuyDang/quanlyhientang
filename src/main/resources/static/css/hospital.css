@@ -1,0 +1,187 @@
+/* ==========================================================================
+   CSS DÀNH RIÊNG CHO TRANG QUẢN LÝ BỆNH VIỆN (HOSPITAL MANAGEMENT)
+   ========================================================================== */
+
+/* Định dạng thanh công cụ phía trên */
+.toolbar-container {
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* Định dạng nút Thêm bệnh viện */
+.btn-add-hospital {
+    background-color: #0d6efd;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+.btn-add-hospital:hover {
+    background-color: #0b5ed7;
+}
+
+/* Định dạng ô tìm kiếm giống ảnh */
+.search-box-custom {
+    width: 320px;
+}
+.search-box-custom .input-group-text {
+    background-color: #fff;
+    border-right: none;
+    color: #6c757d;
+    padding-left: 12px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+.search-box-custom .form-control {
+    border-left: none;
+    padding-left: 4px;
+    font-size: 14px;
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+.search-box-custom .form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+}
+
+/* Định dạng bảng danh sách (Table) */
+.hospital-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+.table-custom {
+    margin-bottom: 0;
+}
+.table-custom thead th {
+    background-color: #f8f9fa;
+    color: #333333;
+    font-weight: 600;
+    font-size: 14px;
+    border-bottom: 1px solid #edf2f7;
+    padding: 14px 16px;
+}
+.table-custom tbody td {
+    padding: 16px;
+    color: #4a5568;
+    font-size: 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid #edf2f7;
+}
+.table-custom tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Mã bệnh viện dạng chữ màu xám đậm đặc trưng */
+.hospital-code {
+    font-weight: 500;
+    color: #4a5568;
+}
+
+/* Định dạng các nút hành động (Sửa / Xóa) chuẩn màu trong ảnh */
+.btn-action-edit {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: opacity 0.2s;
+}
+.btn-action-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    transition: opacity 0.2s;
+}
+.btn-action-edit:hover, .btn-action-delete:hover {
+    opacity: 0.85;
+    color: white;
+}
+
+/* Định dạng thanh phân trang (Pagination) giống ảnh */
+.pagination-custom .page-link {
+    color: #4a5568;
+    border: 1px solid #e2e8f0;
+    padding: 6px 12px;
+    font-size: 14px;
+    margin: 0 2px;
+    border-radius: 4px;
+}
+.pagination-custom .page-item.active .page-link {
+    background-color: #cfe2ff;
+    border-color: #cfe2ff;
+    color: #0d6efd;
+    font-weight: 600;
+}
+.pagination-custom .page-item.disabled .page-link {
+    color: #cbd5e1;
+    background-color: #fff;
+}
+
+/* ==========================================================================
+   CSS BỔ SUNG CHO MÀN HÌNH THÊM MỚI BỆNH VIỆN (CREATE HOSPITAL)
+   ========================================================================== */
+
+.form-container-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    background-color: #ffffff;
+    padding: 30px;
+    margin-top: 10px;
+}
+
+.form-label-custom {
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+.form-control-custom {
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #333333;
+}
+
+.form-control-custom:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.btn-form-submit {
+    background-color: #0d6efd;
+    border: none;
+    padding: 10px 24px;
+    font-weight: 500;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.btn-form-cancel {
+    background-color: #f1f5f9;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+    padding: 10px 24px;
+    font-weight: 500;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-form-cancel:hover {
+    background-color: #e2e8f0;
+    color: #334155;
+}

@@ -1,0 +1,53 @@
+<div th:fragment="header(title)">
+
+    <div class="page-header d-flex justify-content-between align-items-center bg-white" style="height: 70px; padding: 0 10px; border-bottom: 1px solid #edf2f7;">
+
+        <h3 class="fw-bold text-dark mb-0" style="font-size: 22px;" th:text="${title}">
+            Dashboard
+        </h3>
+
+        <div class="dropdown">
+
+            <button class="btn btn-light border dropdown-toggle d-flex align-items-center gap-2"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    style="padding: 6px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;">
+
+                <img th:src="${avatarUrl != null ? avatarUrl : 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?w=50'}"
+                     alt="avatar"
+                     class="rounded-circle"
+                     style="width: 24px; height: 24px; object-fit: cover;">
+
+                <span th:text="${username != null ? username : 'Admin Trung tâm'}">
+                    Admin Trung tâm
+                </span>
+
+            </button>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 mt-2" style="border-radius: 8px; min-width: 160px;">
+
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2"
+                       th:href="@{/profile}"
+                       style="font-size: 14px; padding: 10px 20px;">
+                        <i class="bi bi-person text-muted"></i> Hồ sơ
+                    </a>
+                </li>
+
+                <li><hr class="dropdown-divider" style="border-top: 1px solid #f1f5f9;"></li>
+
+                <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 text-danger"
+                       th:href="@{/login}"
+                       style="font-size: 14px; padding: 10px 20px;">
+                        <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>

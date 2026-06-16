@@ -1,0 +1,119 @@
+body{
+    margin:0;
+    background:#f5f6fa;
+    font-family:'Segoe UI',sans-serif;
+}
+
+/* ===== LAYOUT ===== */
+
+.wrapper{
+    display:flex;
+    min-height:100vh;
+}
+
+/* ===== SIDEBAR ===== */
+
+.sidebar{
+    width:260px;
+    background:#0d1b3d;
+    color:white;
+
+    position:fixed;
+    top:0;
+    left:0;
+
+    height:100vh;
+    padding:15px;
+}
+
+.logo{
+    padding:20px;
+    text-align:center;
+    font-size:18px;
+    font-weight:bold;
+    line-height:28px;
+
+    margin-bottom:20px;
+
+    border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+/* ===== MENU ===== */
+
+.menu{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.menu li{
+    margin-bottom:10px;
+}
+
+.menu-btn{
+    display:flex;
+    align-items:center;
+    gap:12px;
+
+    padding:14px 16px;
+
+    color:white;
+    text-decoration:none;
+
+    border-radius:12px;
+
+    transition:.3s;
+}
+
+.menu-btn:hover{
+    background:#163d8f;
+    color:white;
+}
+
+.menu-btn.active{
+    background:#1e4db7;
+    color:white;
+}
+
+.menu-btn i{
+    width:22px;
+}
+
+/* ===== CONTENT ===== */
+
+.content{
+    flex:1;
+    margin-left:260px;
+    padding:25px;
+}
+
+/* ===== HEADER ===== */
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:25px;
+}
+
+/* ===== CARD ===== */
+
+.card{
+    border:none;
+    border-radius:15px;
+
+    box-shadow:
+            0 2px 10px rgba(0,0,0,.08);
+}
+
+/* ===== FORM ===== */
+
+.form-control,
+.form-select{
+    border-radius:10px;
+}
+
+.btn-primary{
+    border-radius:10px;
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Hệ thống quản lý ca bệnh</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body class="bg-login-wrapper">
+
+<div class="container d-flex justify-content-center">
+    <div class="row login-main-card align-items-center">
+
+        <div class="col-md-6 login-left-brand">
+            <div class="brand-image-container">
+                <svg width="140" height="140" viewBox="0 0 140 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="25" y="45" width="90" height="80" rx="8" fill="#e2e8f0"/>
+                    <rect x="45" y="20" width="50" height="105" rx="6" fill="#cbd5e1"/>
+                    <circle cx="70" cy="50" r="18" fill="#ffffff"/>
+                    <path d="M70 41V59M61 50H79" stroke="#0d6efd" stroke-width="5" stroke-linecap="round"/>
+                    <rect x="52" y="75" width="10" height="10" rx="2" fill="#94a3b8"/>
+                    <rect x="78" y="75" width="10" height="10" rx="2" fill="#94a3b8"/>
+                    <rect x="52" y="95" width="10" height="10" rx="2" fill="#94a3b8"/>
+                    <rect x="78" y="95" width="10" height="10" rx="2" fill="#94a3b8"/>
+                    <circle cx="18" cy="110" r="10" fill="#4ade80" opacity="0.8"/>
+                    <circle cx="122" cy="110" r="12" fill="#4ade80" opacity="0.8"/>
+                    <rect x="15" y="110" width="6" height="15" fill="#94a3b8"/>
+                    <rect x="119" y="110" width="6" height="15" fill="#94a3b8"/>
+                </svg>
+            </div>
+            <div class="brand-title-main">HỆ THỐNG QUẢN LÝ<br>CA BỆNH</div>
+            <div class="brand-subtitle-sub">Quản lý dữ liệu ca bệnh và khả năng hiến tạng</div>
+        </div>
+
+        <div class="col-md-6 login-right-form">
+            <div class="form-title-login">Đăng nhập</div>
+
+            <form th:action="@{/account}" method="GET">
+
+                <div class="mb-3">
+                    <label class="form-label login-label-custom">Tên đăng nhập</label>
+                    <input type="text" class="form-control login-input-custom" placeholder="Nhập tên đăng nhập" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label login-label-custom">Mật khẩu</label>
+                    <div class="password-wrapper-custom">
+                        <input type="password" id="inputPassword" class="form-control login-input-custom" placeholder="Nhập mật khẩu" required>
+                        <i class="bi bi-eye-slash toggle-eye-icon" id="togglePasswordBtn" onclick="handleTogglePasswordView()"></i>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input form-check-input-custom" id="rememberMe">
+                        <label class="form-check-label form-check-label-custom" for="rememberMe">Ghi nhớ đăng nhập</label>
+                    </div>
+                    <a href="#" class="link-forgot-pwd">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="btn btn-login-submit">Đăng nhập</button>
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function handleTogglePasswordView() {
+        const passwordInput = document.getElementById('inputPassword');
+        const toggleIcon = document.getElementById('togglePasswordBtn');
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            // Đổi icon từ mắt gạch chéo sang mắt mở
+            toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
+        } else {
+            passwordInput.type = 'password';
+            // Đổi ngược lại
+            toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
+        }
+    }
+</script>
+</body>
+</html>

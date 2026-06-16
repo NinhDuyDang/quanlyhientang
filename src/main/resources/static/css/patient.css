@@ -1,0 +1,98 @@
+/* ==========================================================================
+   CSS DÀNH RIÊNG CHO MODULE CA BỆNH (PATIENT MANAGEMENT)
+   ========================================================================== */
+
+/* Định dạng thanh bộ lọc (Filter bar) phía trên */
+.filter-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.filter-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 6px;
+}
+
+/* Các Badge trạng thái đặc trưng theo ảnh mẫu */
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    display: inline-block;
+}
+.status-risk {
+    background-color: #fff3cd;
+    color: #856404;
+}
+.status-confirmed {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+.status-rejected {
+    background-color: #f8d7da;
+    color: #842029;
+}
+
+/* Định dạng bảng danh sách */
+.patient-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+}
+.table-custom thead th {
+    background-color: #f8f9fa;
+    color: #333333;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #edf2f7;
+}
+.table-custom tbody td {
+    padding: 14px 16px;
+    color: #4a5568;
+    font-size: 14px;
+    vertical-align: middle;
+    border-bottom: 1px solid #edf2f7;
+}
+
+/* Định dạng form nhập liệu (Thêm / Sửa) */
+.form-container-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    background-color: #ffffff;
+    padding: 30px;
+}
+.form-label-custom {
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+.form-control-custom {
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    padding: 10px 14px;
+    font-size: 14px;
+}
+.form-control-custom:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+/* Nút bấm hành động sửa xóa nhanh */
+.btn-action-edit, .btn-action-delete {
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: white;
+}
+.btn-action-edit { background-color: #0d6efd; }
+.btn-action-delete { background-color: #dc3545; }
+.btn-action-edit:hover, .btn-action-delete:hover { opacity: 0.85; color: white; }

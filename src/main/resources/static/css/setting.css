@@ -1,0 +1,58 @@
+/* ==========================================================================
+   CSS CHO MÀN HÌNH CÀI ĐẶT & HỒ SƠ - ĐỒNG BỘ GIAO DIỆN PHẲNG
+   ========================================================================== */
+
+/* Khung bọc Form và Thẻ Profile */
+.setting-card-custom {
+    border: none !important;
+    border-radius: 8px !important;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    padding: 35px;
+}
+
+/* Kiểu dáng nhãn chữ */
+.setting-label {
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 6px;
+    font-size: 14px;
+}
+
+/* Ô nhập liệu đồng bộ hệ thống */
+.setting-input {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    color: #2d3748 !important;
+}
+.setting-input:focus {
+    border-color: #0d6efd !important;
+    box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15) !important;
+}
+
+/* Avatar xem trước hình tròn và viền trang nhã */
+.preview-avatar-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f1f5f9;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+/* Phần hiển thị text ở trang xem hồ sơ */
+.profile-value-text {
+    font-size: 15px;
+    color: #1a202c;
+    font-weight: 500;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+.profile-label-text {
+    font-size: 14px;
+    color: #718096;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+}

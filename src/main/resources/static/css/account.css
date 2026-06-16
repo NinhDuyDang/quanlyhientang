@@ -1,0 +1,118 @@
+/* ==========================================================================
+   CSS QUẢN LÝ TÀI KHOẢN - ĐỒNG BỘ 100% VỚI PHONG CÁCH HỆ THỐNG GỐC
+   ========================================================================== */
+
+/* Định dạng cấu trúc bảng theo chuẩn phẳng */
+.card-table-container {
+    border: none !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    background-color: #ffffff;
+}
+
+.table-custom-style thead th {
+    background-color: #fafafa !important;
+    color: #000000 !important;
+    font-weight: 500 !important;
+    font-size: 14px;
+    padding: 16px 20px !important;
+    border-bottom: 1px solid #edf2f7 !important;
+}
+
+.table-custom-style tbody td {
+    padding: 18px 20px !important;
+    font-size: 14px;
+    color: #2d3748;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+/* Tên đăng nhập (Username) chữ thường đậm vừa phải */
+.text-username-custom {
+    font-weight: 600;
+    color: #1a202c;
+}
+
+/* NÚT GẠT SWITCH ON/OFF (ẨN / HIỆN TRẠNG THÁI) */
+.form-switch-custom {
+    position: relative;
+    display: inline-block;
+    width: 42px;
+    height: 24px;
+    margin-bottom: 0;
+}
+.form-switch-custom input {
+    opacity: 0; width: 0; height: 0;
+}
+.slider-toggle {
+    position: absolute; cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1; transition: .3s; border-radius: 24px;
+}
+.slider-toggle:before {
+    position: absolute; content: "";
+    height: 18px; width: 18px; left: 3px; bottom: 3px;
+    background-color: white; transition: .3s; border-radius: 50%;
+}
+input:checked + .slider-toggle {
+    background-color: #0d6efd;
+}
+input:checked + .slider-toggle:before {
+    transform: translateX(18px);
+}
+
+/* TAG VAI TRÒ (BADGE ROLE) */
+.badge-role {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+.role-admin {
+    background-color: #e0f2fe; color: #0369a1;
+}
+.role-hospital {
+    background-color: #f0fdf4; color: #166534;
+}
+
+/* KHỐI NÚT THAO TÁC HÀNH ĐỘNG VUÔNG PHẲNG (SỬA / XÓA) ĐỒNG BỘ MÀU GỐC */
+.btn-square-edit {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    text-decoration: none;
+    transition: background-color 0.15s;
+}
+.btn-square-edit:hover { background-color: #0b5ed7 !important; color: white !important; }
+
+.btn-square-delete {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    transition: background-color 0.15s;
+}
+.btn-square-delete:hover { background-color: #bb2d3b !important; }
+
+/* LAYOUT FORM NHẬP LIỆU */
+.form-container-card {
+    border: none; border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    background-color: #ffffff; padding: 30px; margin-top: 10px;
+}
+.form-label-custom { font-weight: 500; color: #4a5568; margin-bottom: 6px; font-size: 14px; }
+.form-control-custom { border-radius: 6px; border: 1px solid #cbd5e1; padding: 10px 14px; font-size: 14px; }
+.cursor-pointer { cursor: pointer; }

@@ -1,0 +1,143 @@
+/* ==========================================================================
+   CSS CHO MÀN HÌNH ĐĂNG NHẬP - ĐỒNG BỘ 100% IMAGE_57AFDF.PNG
+   ========================================================================== */
+
+/* ĐÃ SỬA LỖI CÚ PHÁP: Bộ chọn body chuẩn và đẩy khối đăng nhập xuống chính giữa trang */
+body {
+    background-color: #f4f6f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    width: 100vw;
+    display: flex !important;
+    align-items: center !important;       /* Căn giữa theo chiều dọc */
+    justify-content: center !important;   /* Căn giữa theo chiều ngang */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Khối bao toàn bộ khung đăng nhập bo góc nhẹ */
+.login-main-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+    width: 900px;
+    max-width: 100%;
+    padding: 60px 40px;
+}
+
+/* KHỐI BÊN TRÁI: LOGO VÀ TIÊU ĐỀ HỆ THỐNG */
+.login-left-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding-right: 40px;
+    border-right: 1px solid #edf2f7;
+}
+
+.brand-title-main {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1a202c;
+    letter-spacing: 0.5px;
+    margin-top: 24px;
+    margin-bottom: 8px;
+}
+
+.brand-subtitle-sub {
+    font-size: 14px;
+    color: #718096;
+}
+
+/* KHỐI BÊN PHẢI: FORM ĐĂNG NHẬP */
+.login-right-form {
+    padding-left: 50px;
+}
+
+.form-title-login {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 28px;
+}
+
+/* Các nhãn ô nhập liệu input */
+.login-label-custom {
+    font-size: 13px;
+    font-weight: 500;
+    color: #4a5568;
+    margin-bottom: 8px;
+}
+
+/* Ô input nhập liệu viền xám mảnh */
+.login-input-custom {
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 10px 14px !important;
+    font-size: 14px !important;
+    color: #2d3748 !important;
+    box-shadow: none !important;
+}
+
+.login-input-custom::placeholder {
+    color: #a0aec0;
+}
+
+/* Định dạng wrapper cho ô mật khẩu chứa icon mắt */
+.password-wrapper-custom {
+    position: relative;
+}
+
+.password-wrapper-custom .toggle-eye-icon {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #718096;
+    font-size: 16px;
+    z-index: 10;
+}
+
+/* Checkbox và text đi kèm */
+.form-check-label-custom {
+    font-size: 13px;
+    color: #4a5568;
+    user-select: none;
+}
+
+.form-check-input-custom {
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* NÚT ĐĂNG NHẬP PHẲNG XANH DƯƠNG */
+.btn-login-submit {
+    background-color: #0d6efd !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 12px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    width: 100%;
+    transition: background-color 0.2s;
+}
+
+.btn-login-submit:hover {
+    background-color: #0b5ed7 !important;
+}
+
+/* Link quên mật khẩu */
+.link-forgot-pwd {
+    font-size: 13px;
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.link-forgot-pwd:hover {
+    text-decoration: underline;
+}

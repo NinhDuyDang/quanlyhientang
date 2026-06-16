@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/main-layout :: layout(~{:: .hospital-content-block}, 'Quản lý bệnh viện', ~{:: .page-css}, ~{:: .page-js})}">
+<head>
+    <th:block class="page-css">
+        <link rel="stylesheet" th:href="@{/css/hospital.css}">
+    </th:block>
+</head>
+<body>
+
+<div class="hospital-content-block">
+
+    <div class="d-flex justify-content-between align-items-center toolbar-container mb-3">
+        <a th:href="@{/hospital/create}" class="btn btn-primary btn-add-hospital d-flex align-items-center gap-2 text-white text-decoration-none">
+            <i class="bi bi-plus-lg"></i> Thêm bệnh viện
+        </a>
+
+        <form th:action="@{/hospital}" method="get" class="search-box-custom">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <button type="submit" style="background: none; border: none; padding: 0;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </span>
+                <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tìm kiếm bệnh viện...">
+            </div>
+        </form>
+    </div>
+
+    <div class="card hospital-card">
+        <div class="table-responsive">
+            <table class="table table-custom align-middle">
+                <thead>
+                <tr>
+                    <th style="width: 15%;">Mã bệnh viện</th>
+                    <th style="width: 25%;">Tên bệnh viện</th>
+                    <th style="width: 15%;">Tỉnh/Thành phố</th>
+                    <th style="width: 15%;">Số điện thoại</th>
+                    <th style="width: 20%;">Email</th>
+                    <th class="text-center" style="width: 10%;">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(hospitals)}">
+                    <td colspan="6" class="text-center text-muted py-4">Không tìm thấy dữ liệu bệnh viện nào.</td>
+                </tr>
+                <tr th:each="hp : ${hospitals}">
+                    <td class="hospital-code" th:text="${hp.code}">BV001</td>
+                    <td th:text="${hp.name}">Bệnh viện Bạch Mai</td>
+                    <td th:text="${hp.province}">Hà Nội</td>
+                    <td th:text="${hp.phone}">024 3869 3731</td>
+                    <td th:text="${hp.email}">bachmai@hosp.vn</td>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a th:href="@{/hospital/edit/{id}(id=${hp.id})}" class="btn btn-sm btn-warning text-white text-decoration-none d-flex align-items-center gap-1" title="Sửa bệnh viện">
+                                <i class="bi bi-pencil-fill"></i> Sửa
+                            </a>
+                            <button type="button" class="btn btn-sm btn-danger d-flex align-items-center gap-1"
+                                    th:data-id="${hp.id}"
+                                    th:data-code="${hp.code}"
+                                    th:data-name="${hp.name}"
+                                    onclick="confirmDelete(this)"
+                                    title="Xóa bệnh viện">
+                                <i class="bi bi-trash-fill"></i> Xóa
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4" th:if="${totalPages > 0}">
+        <nav>
+            <ul class="pagination pagination-custom mb-0">
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link" th:href="@{/hospital(page=${currentPage - 1}, keyword=${keyword})}"><i class="bi bi-chevron-left"></i></a>
+                </li>
+                <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'">
+                    <a class="page-link" th:href="@{/hospital(page=${i}, keyword=${keyword})}" th:text="${i}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link" th:href="@{/hospital(page=${currentPage + 1}, keyword=${keyword})}"><i class="bi bi-chevron-right"></i></a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<th:block class="page-js">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(button) {
+            const id = button.getAttribute('data-id');
+            const code = button.getAttribute('data-code');
+            const name = button.getAttribute('data-name');
+
+            // Cấu hình hiển thị Popup hỏi ý kiến người dùng
+            Swal.fire({
+                title: 'Bạn có chắc chắn muốn xóa?',
+                text: `Bệnh viện: "${name}" (${code}) sẽ bị xóa vĩnh viễn khỏi hệ thống!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý xóa',
+                cancelButtonText: 'Hủy bỏ',
+                reverseButtons: true // Đổi vị trí nút Hủy sang bên trái, nút Xóa sang bên phải cho thuận tay
+            }).then((result) => {
+                // Nếu người dùng bấm vào nút "Đồng ý xóa" thì mới chuyển hướng sang URL xóa
+                if (result.isConfirmed) {
+                    window.location.href = `/hospital/delete/${id}`;
+                }
+            });
+        }
+    </script>
+</th:block>
+</body>
+</html>

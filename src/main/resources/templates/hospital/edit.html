@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/main-layout :: layout(~{:: .hospital-content-block}, 'Chỉnh sửa bệnh viện', ~{:: .page-css}, ~{:: .page-js})}">
+<head>
+    <th:block class="page-css">
+        <link rel="stylesheet" th:href="@{/css/hospital.css}">
+    </th:block>
+</head>
+<body>
+<div class="hospital-content-block">
+    <div class="card p-4 mx-auto" style="max-width: 600px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+        <h4 class="fw-bold text-success mb-4"><i class="bi bi-pencil-square me-2"></i>Chỉnh sửa thông tin bệnh viện</h4>
+
+        <form th:action="@{/hospital/update/{id}(id=${hospitalId})}" th:object="${hospitalRequest}" method="post">
+            <div class="mb-3">
+                <label class="form-label fw-bold text-muted">Mã bệnh viện (Không cho phép sửa)</label>
+                <input type="text" th:field="*{code}" class="form-control" readonly style="background-color: #f8f9fa;">
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tên bệnh viện</label>
+                <input type="text" th:field="*{name}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Tỉnh / Thành phố</label>
+                <input type="text" th:field="*{province}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label fw-bold">Địa chỉ cụ thể</label>
+                <input type="text" th:field="*{address}" class="form-control">
+            </div>
+            <div class="mb-2 row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Số điện thoại</label>
+                    <input type="text" th:field="*{phone}" class="form-control">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Email</label>
+                    <input type="email" th:field="*{email}" class="form-control">
+                </div>
+            </div>
+            <div class="d-flex gap-2 justify-content-end mt-2">
+                <a th:href="@{/hospital}" class="btn btn-light border">Hủy bỏ</a>
+                <button type="submit" class="btn btn-success px-4">Cập nhật</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<th:block class="page-js">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var errorMsg = /*[[${errorMessage}]]*/ null;
+        if (errorMsg) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Thất bại!',
+                text: errorMsg,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Đồng ý'
+            });
+        }
+        /*]]>*/
+    </script>
+</th:block>
+</body>
+</html>

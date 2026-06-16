@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{fragments/main-layout :: layout(~{:: .account-content-block}, 'Quản lý tài khoản', ~{:: .page-css}, ~{})}">
+<head>
+    <th:block class="page-css">
+        <link rel="stylesheet" th:href="@{/css/account.css}">
+    </th:block>
+</head>
+<body>
+
+<div class="account-content-block">
+
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-2">
+        <a th:href="@{/account/create}" class="btn btn-primary d-flex align-items-center gap-2 text-white text-decoration-none" style="padding: 8px 16px; font-weight: 500; border-radius: 6px; font-size: 14px; background-color: #0d6efd; border: none;">
+            <i class="bi bi-plus-lg"></i> Thêm tài khoản
+        </a>
+
+        <div style="width: 320px;">
+            <div class="input-group" style="border-radius: 6px; overflow: hidden;">
+                <span class="input-group-text bg-white text-muted border-end-0"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control border-start-0" style="font-size: 14px;" placeholder="Tìm kiếm tài khoản...">
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-table-container overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-custom-style align-middle mb-0">
+                <thead>
+                <tr>
+                    <th style="width: 8%;">ID</th>
+                    <th style="width: 20%;">Tên đăng nhập</th>
+                    <th style="width: 15%;">Mật khẩu</th>
+                    <th style="width: 12%;">Vai trò</th>
+                    <th style="width: 20%;">Thuộc đơn vị</th>
+                    <th style="width: 15%;">Ngày tạo</th>
+                    <th style="width: 12%;">Trạng thái</th>
+                    <th class="text-end" style="width: 8%; padding-right: 24px !important;">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="u : ${users}">
+                    <td class="text-secondary" th:text="${u.id}">1</td>
+                    <td class="text-username-custom" th:text="${u.username}">admin_trungtam</td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <span th:id="'pwd-' + ${u.id}" class="text-muted" style="font-size: 12px; letter-spacing: 1px;">••••••••</span>
+                            <i class="bi bi-eye text-primary cursor-pointer" style="font-size: 13px;" th:data-id="${u.id}" th:data-pwd="${u.password}" onclick="togglePasswordView(this)"></i>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="badge-role" th:classappend="${u.role == 'ADMIN' ? 'role-admin' : 'role-hospital'}" th:text="${u.role}">ADMIN</span>
+                    </td>
+                    <td class="text-secondary" th:text="${u.hospitalName}">Trung tâm Điều phối</td>
+                    <td class="text-muted" th:text="${u.createdAt}">10/06/2026 08:30</td>
+
+                    <td>
+                        <label class="form-switch-custom">
+                            <input type="checkbox" th:checked="${u.enabled}" th:data-id="${u.id}" onclick="changeUserStatus(this)">
+                            <span class="slider-toggle"></span>
+                        </label>
+                    </td>
+
+                    <td class="text-end" style="padding-right: 24px !important;">
+                        <div class="d-flex justify-content-end gap-2">
+                            <a th:href="@{/account/edit/{id}(id=${u.id})}" class="btn-square-edit" title="Sửa tài khoản">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <button class="btn-square-delete" th:data-id="${u.id}" onclick="confirmDeleteUser(this)" title="Xóa tài khoản">
+                                <i class="bi bi-trash-fill"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <nav>
+            <ul class="pagination mb-0" style="--bs-pagination-active-bg: #0d6efd; gap: 4px;">
+                <li class="page-item disabled"><a class="page-link rounded border-0" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                <li class="page-item active"><a class="page-link rounded border-0" href="#">1</a></li>
+                <li class="page-item"><a class="page-link rounded border-0" href="#">2</a></li>
+                <li class="page-item"><a class="page-link rounded border-0" href="#"><i class="bi bi-chevron-right"></i></a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<script>
+    function togglePasswordView(icon) {
+        const id = icon.getAttribute('data-id');
+        const realPwd = icon.getAttribute('data-pwd');
+        const span = document.getElementById('pwd-' + id);
+
+        if (span.innerText === '••••••••') {
+            span.innerText = realPwd;
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+            span.innerText = '••••••••';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+    }
+
+    function changeUserStatus(checkbox) {
+        const userId = checkbox.getAttribute('data-id');
+        window.location.href = `/account/toggle-status/${userId}`;
+    }
+
+    function confirmDeleteUser(button) {
+        const id = button.getAttribute('data-id');
+        if (confirm(`Bạn có chắc chắn muốn xóa tài khoản này không?`)) {
+            window.location.href = `/account/delete/${id}`;
+        }
+    }
+</script>
+</body>
+</html>

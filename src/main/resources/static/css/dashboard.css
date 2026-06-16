@@ -1,0 +1,17 @@
+.stat-card{
+    padding:20px;
+    transition:.3s;
+}
+
+.stat-card:hover{
+    transform:translateY(-3px);
+}
+
+.chart-container{
+    position:relative;
+    height:250px;
+}
+
+.card h6{
+    font-weight:600;
+}
