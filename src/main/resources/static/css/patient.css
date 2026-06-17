@@ -9,6 +9,7 @@
     padding: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
+
 .filter-label {
     font-size: 13px;
     font-weight: 500;
@@ -19,19 +20,39 @@
 /* Các Badge trạng thái đặc trưng theo ảnh mẫu */
 .badge-status {
     padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 500;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
     display: inline-block;
 }
+
+/* Cấp độ 1: Vàng (Cảnh báo) */
+.status-lvl1 {
+    background-color: #ffc107;
+    color: #000;
+}
+
+/* Cấp độ 2: Cam (Nguy hiểm) */
+.status-lvl2 {
+    background-color: #fd7e14;
+}
+
+/* Cấp độ 3: Đỏ (Nguy kịch) */
+.status-lvl3 {
+    background-color: #dc3545;
+}
+
 .status-risk {
     background-color: #fff3cd;
     color: #856404;
 }
+
 .status-confirmed {
     background-color: #d1e7dd;
     color: #0f5132;
 }
+
 .status-rejected {
     background-color: #f8d7da;
     color: #842029;
@@ -44,6 +65,7 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     overflow: hidden;
 }
+
 .table-custom thead th {
     background-color: #f8f9fa;
     color: #333333;
@@ -52,6 +74,7 @@
     padding: 14px 16px;
     border-bottom: 1px solid #edf2f7;
 }
+
 .table-custom tbody td {
     padding: 14px 16px;
     color: #4a5568;
@@ -68,31 +91,61 @@
     background-color: #ffffff;
     padding: 30px;
 }
+
 .form-label-custom {
     font-weight: 500;
     color: #333333;
     margin-bottom: 6px;
     font-size: 14px;
 }
+
 .form-control-custom {
     border-radius: 6px;
     border: 1px solid #dee2e6;
     padding: 10px 14px;
     font-size: 14px;
 }
+
 .form-control-custom:focus {
     border-color: #0d6efd;
     box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
 }
 
 /* Nút bấm hành động sửa xóa nhanh */
-.btn-action-edit, .btn-action-delete {
+.btn-action-edit,
+.btn-action-delete {
     border: none;
     padding: 6px 10px;
     border-radius: 4px;
     font-size: 13px;
     color: white;
 }
-.btn-action-edit { background-color: #0d6efd; }
-.btn-action-delete { background-color: #dc3545; }
-.btn-action-edit:hover, .btn-action-delete:hover { opacity: 0.85; color: white; }
+
+.btn-action-edit {
+    background-color: #0d6efd;
+}
+
+.btn-action-delete {
+    background-color: #dc3545;
+}
+
+.btn-action-edit:hover,
+.btn-action-delete:hover {
+    opacity: 0.85;
+    color: white;
+}
+/* ==========================================================================
+   BỔ SUNG: ẨN NÚT TĂNG GIẢM CHO INPUT SỐ
+   ========================================================================== */
+
+/* Ẩn nút tăng giảm cho Chrome, Safari, Edge, Opera */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
+
+/* Ẩn nút tăng giảm cho Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}

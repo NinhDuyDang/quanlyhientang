@@ -71,9 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (pieCanvas) {
         const translateLabels = (labels) => {
             return labels.map(label => {
-                if (label === 'BRAIN_DEATH_RISK') return 'Nguy cơ';
-                if (label === 'CONFIRMED_BRAIN_DEATH') return 'Xác nhận';
-                if (label === 'NOT_ELIGIBLE') return 'Không đủ';
+                if (label === 'BRAIN_DEATH_1') return 'Chết não lần 1 ';
+                if (label === 'BRAIN_DEATH_2') return 'Chết não lần 2';
+                if (label === 'BRAIN_DEATH_3') return 'Chết não lần 3';
                 return label;
             });
         };
@@ -145,9 +145,9 @@ function applyFilter() {
             const pieChartInstance = Chart.getChart("pieChart");
             if (pieChartInstance) {
                 const translateLabels = (labels) => labels.map(l => {
-                    if (l === 'BRAIN_DEATH_RISK') return 'Nguy cơ';
-                    if (l === 'CONFIRMED_BRAIN_DEATH') return 'Xác nhận';
-                    if (l === 'NOT_ELIGIBLE') return 'Không đủ';
+                    if (l === 'BRAIN_DEATH_1') return 'Chết não lần 1 ';
+                    if (l === 'BRAIN_DEATH_2') return 'Chết não lần 2';
+                    if (l === 'BRAIN_DEATH_3') return 'Chết não lần 3';
                     return l;
                 });
                 pieChartInstance.data.labels = translateLabels(Object.keys(data.statusMap));

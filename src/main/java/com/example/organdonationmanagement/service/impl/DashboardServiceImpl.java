@@ -22,9 +22,9 @@ public class DashboardServiceImpl implements DashboardService {
     public Map<String, Long> getDashboardMetrics() {
         Map<String, Long> metrics = new HashMap<>();
         metrics.put("totalCases", patientCaseRepository.count());
-        metrics.put("riskCases", patientCaseRepository.countByStatus(PatientStatus.BRAIN_DEATH_RISK));
-        metrics.put("confirmedCases", patientCaseRepository.countByStatus(PatientStatus.CONFIRMED_BRAIN_DEATH));
-        metrics.put("notEligibleCases", patientCaseRepository.countByStatus(PatientStatus.NOT_ELIGIBLE));
+        metrics.put("riskCases", patientCaseRepository.countByStatus(PatientStatus.BRAIN_DEATH_1));
+        metrics.put("confirmedCases", patientCaseRepository.countByStatus(PatientStatus.BRAIN_DEATH_2));
+        metrics.put("notEligibleCases", patientCaseRepository.countByStatus(PatientStatus.BRAIN_DEATH_3));
         return metrics;
     }
 

@@ -1,15 +1,10 @@
 package com.example.organdonationmanagement.service.impl;
 
 import com.example.organdonationmanagement.dto.request.PatientCaseRequest;
-import com.example.organdonationmanagement.entity.Hospital;
-import com.example.organdonationmanagement.entity.PatientCase;
-import com.example.organdonationmanagement.entity.enums.Cause;
-import com.example.organdonationmanagement.entity.enums.DonorStatus;
-import com.example.organdonationmanagement.entity.enums.Gender;
-import com.example.organdonationmanagement.entity.enums.PatientStatus;
+import com.example.organdonationmanagement.entity.*;
+import com.example.organdonationmanagement.entity.enums.*;
 import com.example.organdonationmanagement.exception.ResourceNotFoundException;
-import com.example.organdonationmanagement.repository.HospitalRepository;
-import com.example.organdonationmanagement.repository.PatientCaseRepository;
+import com.example.organdonationmanagement.repository.*;
 import com.example.organdonationmanagement.service.PatientCaseService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +12,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,12 +31,11 @@ public class PatientCaseServiceImpl implements PatientCaseService {
     @Override
     public PatientCase getById(Long id) {
         return patientCaseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Patient case not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Patient case not found with id: " + id));
     }
 
     @Override
     public PatientCase create(PatientCaseRequest request) {
-
         Hospital hospital = hospitalRepository.findById(request.getHospitalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
 
@@ -54,6 +49,7 @@ public class PatientCaseServiceImpl implements PatientCaseService {
                 .donorStatus(DonorStatus.valueOf(request.getDonorStatus().toUpperCase()))
                 .note(request.getNote())
                 .incidentDate(request.getIncidentDate())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         return patientCaseRepository.save(patientCase);
@@ -61,9 +57,8 @@ public class PatientCaseServiceImpl implements PatientCaseService {
 
     @Override
     public PatientCase update(Long id, PatientCaseRequest request) {
-
         PatientCase patientCase = getById(id);
-
+        
         Hospital hospital = hospitalRepository.findById(request.getHospitalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
 
@@ -76,6 +71,7 @@ public class PatientCaseServiceImpl implements PatientCaseService {
         patientCase.setDonorStatus(DonorStatus.valueOf(request.getDonorStatus().toUpperCase()));
         patientCase.setNote(request.getNote());
         patientCase.setIncidentDate(request.getIncidentDate());
+        patientCase.setUpdatedAt(LocalDateTime.now());
 
         return patientCaseRepository.save(patientCase);
     }
@@ -87,9 +83,7 @@ public class PatientCaseServiceImpl implements PatientCaseService {
 
     @Override
     public List<PatientCase> search(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate) {
-
         Specification<PatientCase> specification = (root, query, cb) -> {
-
             List<Predicate> predicates = new ArrayList<>();
 
             if (hospitalId != null) {
@@ -97,8 +91,7 @@ public class PatientCaseServiceImpl implements PatientCaseService {
             }
 
             if (status != null && !status.isBlank()) {
-                predicates.add(cb.equal(root.get("status"),
-                        PatientStatus.valueOf(status.toUpperCase())));
+                predicates.add(cb.equal(root.get("status"), PatientStatus.valueOf(status.toUpperCase())));
             }
 
             if (fromDate != null && toDate != null) {

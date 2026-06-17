@@ -56,7 +56,9 @@
         <div class="col-lg-6">
             <div class="card p-3 chart-container">
                 <h6>Tỷ lệ trạng thái</h6>
-                <canvas id="pieChart" height="250"></canvas>
+                <div class="pie-wrapper" style="align-items: center;">
+                    <canvas id="pieChart"></canvas>
+                </div>
             </div>
         </div>
         <div class="col-lg-6">
@@ -69,9 +71,9 @@
                     </select>
                     <select class="form-select mb-2" id="status">
                         <option value="">Tất cả trạng thái</option>
-                        <option value="BRAIN_DEATH_RISK">Nguy cơ chết não</option>
-                        <option value="CONFIRMED_BRAIN_DEATH">Xác nhận chết não</option>
-                        <option value="NOT_ELIGIBLE">Không đủ điều kiện</option>
+                        <option value="BRAIN_DEATH_1">Nguy cơ chết não lần 1 </option>
+                        <option value="BRAIN_DEATH_1">Nguy cơ chết não lần 2</option>
+                        <option value="BRAIN_DEATH_1">Nguy cơ chết não lần 3</option>
                     </select>
                     <div class="row">
                         <div class="col"><input type="date" class="form-control" id="fromDate"></div>
