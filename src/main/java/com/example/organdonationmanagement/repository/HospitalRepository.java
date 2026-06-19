@@ -13,7 +13,10 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     boolean existsByCode(String code);
 
-    // Câu lệnh JPQL tự động check: Nếu keyword trống -> hiển thị tất cả; Nếu có keyword -> Lọc theo Tên, Mã hoặc Tỉnh thành
+    // Lấy mã của bản ghi mới nhất (sắp xếp giảm dần theo mã)
+    @Query(value = "SELECT code FROM hospitals ORDER BY code DESC LIMIT 1", nativeQuery = true)
+    String findLastCode();
+
     @Query("SELECT h FROM Hospital h WHERE :keyword IS NULL OR :keyword = '' " +
             "OR LOWER(h.name) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(h.code) LIKE LOWER(CONCAT('%', :keyword, '%')) " +

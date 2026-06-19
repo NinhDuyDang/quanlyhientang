@@ -23,14 +23,12 @@ public class DashboardController {
         model.addAttribute("activeMenu", "dashboard");
         model.addAttribute("title", "Bảng điều khiển");
 
-        // 1. Lấy metrics cho 4 thẻ Card
         Map<String, Long> metrics = dashboardService.getDashboardMetrics();
         model.addAttribute("totalCases", metrics.get("totalCases"));
         model.addAttribute("riskCases", metrics.get("riskCases"));
         model.addAttribute("confirmedCases", metrics.get("confirmedCases"));
         model.addAttribute("notEligibleCases", metrics.get("notEligibleCases"));
 
-        // 2. Dữ liệu cho các biểu đồ
         model.addAttribute("lineChartData", dashboardService.getMonthlyTrendData());
 
         Map<String, Long> hospitalData = dashboardService.getHospitalChartData();
@@ -39,7 +37,6 @@ public class DashboardController {
 
         model.addAttribute("statusPieMap", dashboardService.getStatusPieChartData());
 
-        // Danh sách bệnh viện cho bộ lọc
         model.addAttribute("hospitals", hospitalRepository.findAll());
 
         return "dashboard/index";

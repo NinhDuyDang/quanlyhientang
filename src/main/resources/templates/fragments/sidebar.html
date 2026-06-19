@@ -1,61 +1,35 @@
-<div th:fragment="sidebar">
-
+<div th:fragment="sidebar" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
     <div class="sidebar">
-
         <div class="logo">
             HỆ THỐNG<br>
             QUẢN LÝ CA BỆNH
         </div>
-
         <ul class="menu">
-
             <li>
-                <a th:href="@{/dashboard}"
-                   class="menu-btn"
-                   th:classappend="${activeMenu == '/dashboard'} ? ' active'">
-                    <i class="bi bi-house-door-fill"></i>
-                    <span>Dashboard</span>
+                <a th:href="@{/dashboard}" class="menu-btn" th:classappend="${activeMenu == 'dashboard'} ? ' active'">
+                    <i class="bi bi-house-door-fill"></i> <span>Dashboard</span>
                 </a>
             </li>
-
             <li>
-                <a th:href="@{/hospital}"
-                   class="menu-btn"
-                   th:classappend="${activeMenu == '/hospital'} ? ' active'">
-                    <i class="bi bi-hospital"></i>
-                    <span>Bệnh viện</span>
+                <a th:href="@{/hospital}" class="menu-btn" th:classappend="${activeMenu == 'hospital'} ? ' active'">
+                    <i class="bi bi-hospital"></i> <span>Bệnh viện</span>
                 </a>
             </li>
-
             <li>
-                <a th:href="@{/patient}"
-                   class="menu-btn"
-                   th:classappend="${activeMenu == '/patient'} ? ' active'">
-                    <i class="bi bi-clipboard2-pulse-fill"></i>
-                    <span>Ca bệnh</span>
+                <a th:href="@{/patient}" class="menu-btn" th:classappend="${activeMenu == 'patient'} ? ' active'">
+                    <i class="bi bi-clipboard2-pulse-fill"></i> <span>Ca bệnh</span>
                 </a>
             </li>
-
-            <li>
-                <a th:href="@{/account}"
-                   class="menu-btn"
-                   th:classappend="${activeMenu == '/account'} ? ' active'">
-                    <i class="bi bi-people-fill"></i>
-                    <span>Tài khoản</span>
+            <li sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <a th:href="@{/account}" class="menu-btn" th:classappend="${activeMenu == 'account'} ? ' active'">
+                    <i class="bi bi-people-fill"></i> <span>Tài khoản</span>
                 </a>
             </li>
-
             <li>
-                <a th:href="@{/setting}"
-                   class="menu-btn"
-                   th:classappend="${activeMenu == '/setting'} ? ' active'">
-                    <i class="bi bi-gear-fill"></i>
-                    <span>Cài đặt</span>
+                <a th:href="@{/profile/settings}" class="menu-btn" th:classappend="${activeMenu == 'profile'} ? ' active'">
+                    <i class="bi bi-gear-fill"></i> <span>Cài đặt</span>
                 </a>
             </li>
-
         </ul>
-
     </div>
-
 </div>

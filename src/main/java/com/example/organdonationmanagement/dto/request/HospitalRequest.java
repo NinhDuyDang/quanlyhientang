@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor // 🌟 BẮT BUỘC PHẢI THÊM DÒNG NÀY ĐỂ BIẾN CONSTRUCTOR THÀNH PUBLIC
+@AllArgsConstructor
 public class HospitalRequest {
     private String code;
     private String name;

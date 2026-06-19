@@ -12,6 +12,8 @@ public class PatientCaseRequest {
 
     private Integer birthYear;
 
+    private String patientName;
+
     private String gender;
 
     private String cause;

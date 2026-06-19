@@ -2,6 +2,8 @@ package com.example.organdonationmanagement.service;
 
 import com.example.organdonationmanagement.dto.request.PatientCaseRequest;
 import com.example.organdonationmanagement.entity.PatientCase;
+import org.springframework.data.domain.Page;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -12,4 +14,6 @@ public interface PatientCaseService {
     PatientCase update(Long id, PatientCaseRequest request);
     void delete(Long id);
     List<PatientCase> search(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate);
+
+    Page<PatientCase> findPatients(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate, int page, int size);
 }

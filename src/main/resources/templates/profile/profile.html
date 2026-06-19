@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/main-layout :: layout(~{:: .profile-content-block}, 'Hồ sơ người dùng', ~{:: .page-css}, ~{})}">
@@ -12,38 +11,41 @@
 <div class="profile-content-block">
     <div class="mb-3 mt-2">
         <h5 class="fw-semibold text-dark mb-1">Hồ sơ cá nhân</h5>
-        <p class="text-muted small">Thông tin định danh chi tiết của bạn trên hệ thống điều phối ca bệnh</p>
+        <p class="text-muted small">Thông tin định danh chi tiết của bạn trên hệ thống</p>
     </div>
 
-    <div class="card setting-card-custom mx-auto" style="max-width: 800px;">
+    <div th:if="${param.success}" class="alert alert-success">Cập nhật thông tin thành công!</div>
 
+    <div class="card setting-card-custom mx-auto" style="max-width: 800px;">
         <div class="text-center mb-4">
-            <img th:src="${avatarUrl}" class="preview-avatar-circle mb-2" alt="User Avatar" style="width: 110px; height: 110px;">
-            <h4 class="fw-bold text-dark mb-1" th:text="${name}">Admin Trung tâm</h4>
-            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1" style="font-size: 12px; font-weight: 600;">QUẢN TRỊ VIÊN HỆ THỐNG</span>
+            <img th:src="${user.avatarUrl != null ? user.avatarUrl : '/images/default-avatar.png'}"
+                 class="preview-avatar-circle mb-2" alt="Avatar" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover;">
+            <h4 class="fw-bold text-dark mb-1" th:text="${user.fullName}">Tên người dùng</h4>
         </div>
 
         <div class="px-3">
-            <div class="row align-items-center">
+            <div class="row align-items-center mb-2">
                 <div class="col-4 profile-label-text"><i class="bi bi-person me-2 text-muted"></i> Họ và tên:</div>
-                <div class="col-8 profile-value-text text-dark" th:text="${name}">Admin Trung tâm</div>
+                <div class="col-8 profile-value-text text-dark" th:text="${user.fullName}"></div>
             </div>
-            <div class="row align-items-center">
+            <div class="row align-items-center mb-2">
                 <div class="col-4 profile-label-text"><i class="bi bi-calendar-event me-2 text-muted"></i> Tuổi:</div>
-                <div class="col-8 profile-value-text" th:text="${age + ' tuổi'}">35 tuổi</div>
+                <div class="col-8 profile-value-text"
+                     th:text="${user.age != null ? user.age + ' tuổi' : 'Chưa cập nhật'}">
+                </div>
             </div>
-            <div class="row align-items-center">
-                <div class="col-4 profile-label-text"><i class="bi bi-telephone me-2 text-muted"></i> Số điện thoại:</div>
-                <div class="col-8 profile-value-text" th:text="${phone}">024 3869 3731</div>
+            <div class="row align-items-center mb-2">
+                <div class="col-4 profile-label-text"><i class="bi bi-telephone me-2 text-muted"></i> SĐT:</div>
+                <div class="col-8 profile-value-text" th:text="${user.phoneNumber}"></div>
             </div>
-            <div class="row align-items-center">
-                <div class="col-4 profile-label-text"><i class="bi bi-geo-alt me-2 text-muted"></i> Địa chỉ làm việc:</div>
-                <div class="col-8 profile-value-text" th:text="${address}">Giải Phóng, Phương Mai, Đống Đa, Hà Nội</div>
+            <div class="row align-items-center mb-2">
+                <div class="col-4 profile-label-text"><i class="bi bi-geo-alt me-2 text-muted"></i> Địa chỉ:</div>
+                <div class="col-8 profile-value-text" th:text="${user.workAddress}"></div>
             </div>
         </div>
 
         <div class="text-center mt-5">
-            <a th:href="@{/setting}" class="btn btn-outline-primary px-4" style="font-size: 14px; border-radius: 6px;">
+            <a th:href="@{/profile/settings}" class="btn btn-outline-primary px-4" style="font-size: 14px; border-radius: 6px;">
                 <i class="bi bi-pencil-square me-1"></i> Chỉnh sửa thông tin
             </a>
         </div>

@@ -18,9 +18,19 @@
     <div class="card form-container-card">
         <form th:action="@{/patient/create}" th:object="${request}" method="POST">
             <div class="row g-4">
+
                 <div class="col-md-6">
-                    <label class="form-label form-label-custom">Mã ca bệnh <span style="color: red;">*</span></label>
-                    <input type="text" name="caseCode" class="form-control form-control-custom" placeholder="Ví dụ: CA2024060005" required>
+                    <label class="form-label fw-bold">Mã ca bệnh</label>
+                    <input type="text"
+                           class="form-control bg-light"
+                           value="Hệ thống tự động tạo mã"
+                           readonly
+                           disabled>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label form-label-custom">Tên bệnh nhân <span style="color: red;">*</span></label>
+                    <input type="text" name="patientName" class="form-control form-control-custom" placeholder="Nhập họ tên bệnh nhân" required>
                 </div>
 
                 <div class="col-md-6">
@@ -87,7 +97,7 @@
                         <option value="PENDING">Đang chờ</option>
                     </select>
                 </div>
-                
+
                 <div class="col-md-6">
                     <label class="form-label form-label-custom">Ngày ghi nhận <span style="color: red;">*</span></label>
                     <input type="date" name="incidentDate" class="form-control form-control-custom" required>

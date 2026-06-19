@@ -1,85 +1,121 @@
 package com.example.organdonationmanagement.controller;
 
+import com.example.organdonationmanagement.dto.request.ProfileUpdateRequest;
+import com.example.organdonationmanagement.dto.request.UserRequest;
+import com.example.organdonationmanagement.entity.User;
+import com.example.organdonationmanagement.service.HospitalService;
+import com.example.organdonationmanagement.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
 
 @Controller
+@RequiredArgsConstructor
 public class UserController {
 
-    // 1. MÀN HÌNH DANH SÁCH TÀI KHOẢN (USER)
+    private final UserService userService;
+    private final HospitalService hospitalService;
+
+    // --- CÁC MÀN HÌNH QUẢN LÝ TÀI KHOẢN (ADMIN) ---
+
     @GetMapping("/account")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String listUsers(Model model) {
-        model.addAttribute("activeMenu", "account"); // Sidebar tự sáng nút Tài khoản
-        model.addAttribute("username", "Admin Trung tâm");
-
-        // FAKE DATA: Khớp 100% dữ liệu theo ảnh mẫu image_57bf7f.png
-        List<Map<String, Object>> users = new ArrayList<>();
-        users.add(createUserMap(1L, "admin_trungtam", "12345678", "ADMIN", "Trung tâm Điều phối", true, "10/06/2026 08:30"));
-        users.add(createUserMap(2L, "bv_bachmai", "pass@bm123", "HOSPITAL", "Bệnh viện Bạch Mai", true, "11/06/2026 14:15"));
-        users.add(createUserMap(3L, "bv_choray", "cr_coord99", "HOSPITAL", "Bệnh viện Chợ Rẫy", false, "12/06/2026 09:00")); // Trạng thái ẩn/khóa
-        users.add(createUserMap(4L, "vietduc_admin", "vd_pass2026", "HOSPITAL", "Bệnh viện Việt Đức", true, "13/06/2026 16:45"));
-
-        model.addAttribute("users", users);
+        model.addAttribute("activeMenu", "account");
+        model.addAttribute("users", userService.getAll());
         return "account/list";
     }
 
-    // 2. MÀN HÌNH FORM TẠO MỚI TÀI KHOẢN
     @GetMapping("/account/create")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String showCreateForm(Model model) {
+        model.addAttribute("userRequest", new UserRequest());
+        model.addAttribute("hospitals", hospitalService.findAll());
         model.addAttribute("activeMenu", "account");
-        model.addAttribute("username", "Admin Trung tâm");
         return "account/create";
     }
 
-    // 3. MÀN HÌNH FORM CHỈNH SỬA TÀI KHOẢN
+    @PostMapping("/account/create")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String processCreateUser(@ModelAttribute("userRequest") UserRequest request) {
+        userService.create(request);
+        return "redirect:/account";
+    }
+
     @GetMapping("/account/edit/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String showEditForm(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("user", userService.getById(id));
+        model.addAttribute("hospitals", hospitalService.findAll());
         model.addAttribute("activeMenu", "account");
-        model.addAttribute("username", "Admin Trung tâm");
-
-        // Giả lập tìm dữ liệu cũ đổ lên form sửa dựa vào ID nhận được
-        Map<String, Object> userData = createUserMap(id, "bv_bachmai", "pass@bm123", "HOSPITAL", "Bệnh viện Bạch Mai", true, "11/06/2026 14:15");
-        model.addAttribute("user", userData);
-
         return "account/edit";
     }
 
-    // 4. API BẬT/TẮT ẨN HIỆN TÀI KHOẢN (TOGGLE STATUS ENABLED)
-    @GetMapping("/account/toggle-status/{id}")
+    @PostMapping("/account/edit/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String processEditUser(@PathVariable("id") Long id, @ModelAttribute("userRequest") UserRequest request) {
+        userService.update(id, request);
+        return "redirect:/account";
+    }
+
+    @PostMapping("/account/toggle-status/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String toggleUserStatus(@PathVariable("id") Long id) {
-        // Comment: Sau này kết nối database thật gọi service đổi true/false tại đây
-        System.out.println("LOG BACKEND: Đã đảo trạng thái ẩn/hiện của User ID: " + id);
+        userService.toggleStatus(id);
         return "redirect:/account";
     }
 
-    // 5. API XỬ LÝ LỆNH XÓA TÀI KHOẢN
-    @GetMapping("/account/delete/{id}")
+    @PostMapping("/account/delete/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String deleteUser(@PathVariable("id") Long id) {
-        System.out.println("LOG BACKEND: Đã yêu cầu xóa User ID: " + id);
+        userService.delete(id);
         return "redirect:/account";
     }
 
-    // Hàm bổ trợ đóng gói nhanh dữ liệu Map
-    private Map<String, Object> createUserMap(Long id, String username, String password, String role,
-                                              String hospitalName, Boolean enabled, String createdAt) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("id", id);
-        map.put("username", username);
-        map.put("password", password);
-        map.put("role", role);
-        map.put("hospitalName", hospitalName);
-        map.put("enabled", enabled);
-        map.put("createdAt", createdAt);
-        return map;
+    // --- MÀN HÌNH PROFILE (XEM THÔNG TIN) ---
+
+    @GetMapping("/profile")
+    public String showProfile(Principal principal, Model model) {
+        User user = userService.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("user", user);
+        model.addAttribute("activeMenu", "profile");
+        return "profile/profile";
     }
+
+    // --- MÀN HÌNH SETTINGS (CHỈNH SỬA) ---
+
+    @GetMapping("/profile/settings")
+    public String showSettings(Principal principal, Model model) {
+        User user = userService.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("user", user);
+        model.addAttribute("activeMenu", "profile");
+        return "profile/settings";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(Principal principal,
+                                @ModelAttribute ProfileUpdateRequest request,
+                                RedirectAttributes redirectAttributes) {
+
+        // Gọi Service xử lý cả dữ liệu và file upload
+        userService.updateProfile(principal.getName(), request);
+
+        // Flash attribute để thông báo hiện 1 lần rồi mất sau khi reload
+        redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!");
+        return "redirect:/profile";
+    }
+
+    // --- LOGIN ---
+
     @GetMapping("/login")
     public String showLoginPage() {
-        return "login"; // Tìm đến file templates/login.html
+        return "login";
     }
 }

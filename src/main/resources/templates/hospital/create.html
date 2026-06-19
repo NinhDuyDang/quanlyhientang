@@ -14,7 +14,12 @@
         <form th:action="@{/hospital/create}" th:object="${hospitalRequest}" method="post">
             <div class="mb-3">
                 <label class="form-label fw-bold">Mã bệnh viện</label>
-                <input type="text" th:field="*{code}" class="form-control" required placeholder="Ví dụ: BV001">
+                <input type="text"
+                       class="form-control bg-light"
+                       value="Hệ thống tự động tạo mã"
+                       readonly
+                       disabled>
+                <small class="text-muted">Mã bệnh viện sẽ được tạo tự động khi nhấn Lưu lại.</small>
             </div>
             <div class="mb-3">
                 <label class="form-label fw-bold">Tên bệnh viện</label>

@@ -1,9 +1,11 @@
 package com.example.organdonationmanagement.controller;
 
 import com.example.organdonationmanagement.dto.request.PatientCaseRequest;
+import com.example.organdonationmanagement.entity.PatientCase;
 import com.example.organdonationmanagement.repository.HospitalRepository;
 import com.example.organdonationmanagement.service.PatientCaseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,14 +22,27 @@ public class PatientCaseController {
     private final HospitalRepository hospitalRepository;
 
     @GetMapping
-    public String listPatients(@RequestParam(required = false) Long hospitalId,
-                               @RequestParam(required = false) String status,
-                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-                               @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-                               Model model) {
+    public String listPatients(
+            @RequestParam(defaultValue = "1") int page, // Thêm tham số page
+            @RequestParam(required = false) Long hospitalId,
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            Model model) {
+
+        Page<PatientCase> patientPage = patientCaseService.findPatients(hospitalId, status, fromDate, toDate, page - 1, 10);
+
         model.addAttribute("activeMenu", "patient");
-        model.addAttribute("patients", patientCaseService.search(hospitalId, status, fromDate, toDate));
+        model.addAttribute("patients", patientPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", patientPage.getTotalPages());
+
+        model.addAttribute("hospitalId", hospitalId);
+        model.addAttribute("status", status);
+        model.addAttribute("fromDate", fromDate);
+        model.addAttribute("toDate", toDate);
         model.addAttribute("hospitals", hospitalRepository.findAll());
+
         return "patient/list";
     }
 
@@ -52,20 +67,15 @@ public class PatientCaseController {
         return "patient/edit";
     }
 
-  @PostMapping("/edit/{id}")
-public String updatePatient(@PathVariable("id") Long id, 
-                            @ModelAttribute("patient") PatientCaseRequest request) {
-    // Thêm log để kiểm tra trước khi lưu
-    System.out.println("Status nhận được từ form: " + request.getStatus());
-    
-    if (request.getStatus() == null) {
-   
-        throw new IllegalArgumentException("Trạng thái không được để trống!");
+    @PostMapping("/edit/{id}")
+    public String updatePatient(@PathVariable("id") Long id,
+                                @ModelAttribute("patient") PatientCaseRequest request) {
+        if (request.getStatus() == null) {
+            throw new IllegalArgumentException("Trạng thái không được để trống!");
+        }
+        patientCaseService.update(id, request);
+        return "redirect:/patient";
     }
-    
-    patientCaseService.update(id, request);
-    return "redirect:/patient";
-}
 
     @GetMapping("/delete/{id}")
     public String deletePatient(@PathVariable("id") Long id) {

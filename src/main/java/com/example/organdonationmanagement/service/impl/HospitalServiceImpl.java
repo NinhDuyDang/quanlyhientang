@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class HospitalServiceImpl implements HospitalService {
@@ -36,12 +38,18 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public Hospital create(HospitalRequest request) {
-        if (hospitalRepository.existsByCode(request.getCode())) {
-            throw new IllegalArgumentException("Mã bệnh viện này đã tồn tại trên hệ thống!");
-        }
+        String generatedCode;
+        boolean isDuplicate;
+
+        // Vòng lặp: Nếu mã đã tồn tại thì sinh mã mới cho đến khi tìm được mã chưa tồn tại
+        do {
+            int randomNum = (int)(Math.random() * 9000) + 1000; // Sinh số từ 1000 đến 9999
+            generatedCode = "BV" + randomNum;
+            isDuplicate = hospitalRepository.existsByCode(generatedCode);
+        } while (isDuplicate);
 
         Hospital hospital = Hospital.builder()
-                .code(request.getCode())
+                .code(generatedCode)
                 .name(request.getName())
                 .address(request.getAddress())
                 .province(request.getProvince())
@@ -68,5 +76,9 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public void delete(Long id) {
         hospitalRepository.delete(getById(id));
+    }
+    @Override
+    public List<Hospital> findAll() {
+        return hospitalRepository.findAll();
     }
 }

@@ -8,6 +8,10 @@ import com.example.organdonationmanagement.repository.*;
 import com.example.organdonationmanagement.service.PatientCaseService;
 import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -39,8 +43,19 @@ public class PatientCaseServiceImpl implements PatientCaseService {
         Hospital hospital = hospitalRepository.findById(request.getHospitalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
 
+        // 1. Tự sinh mã ca bệnh ngẫu nhiên: CASE + 5 chữ số
+        String generatedCaseCode;
+        boolean isDuplicate;
+        do {
+            int randomNum = (int)(Math.random() * 90000) + 10000;
+            generatedCaseCode = "CASE" + randomNum;
+            isDuplicate = patientCaseRepository.existsByCaseCode(generatedCaseCode);
+        } while (isDuplicate);
+
+        // 2. Build đối tượng
         PatientCase patientCase = PatientCase.builder()
-                .caseCode(request.getCaseCode())
+                .caseCode(generatedCaseCode)
+                .patientName(request.getPatientName()) // Đã có tên bệnh nhân
                 .hospital(hospital)
                 .birthYear(request.getBirthYear())
                 .gender(Gender.valueOf(request.getGender().toUpperCase()))
@@ -58,11 +73,14 @@ public class PatientCaseServiceImpl implements PatientCaseService {
     @Override
     public PatientCase update(Long id, PatientCaseRequest request) {
         PatientCase patientCase = getById(id);
-        
+
         Hospital hospital = hospitalRepository.findById(request.getHospitalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
 
-        patientCase.setCaseCode(request.getCaseCode());
+        // THÊM DÒNG NÀY VÀO:
+        patientCase.setPatientName(request.getPatientName());
+
+        // Các dòng còn lại giữ nguyên
         patientCase.setHospital(hospital);
         patientCase.setBirthYear(request.getBirthYear());
         patientCase.setGender(Gender.valueOf(request.getGender().toUpperCase()));
@@ -103,4 +121,10 @@ public class PatientCaseServiceImpl implements PatientCaseService {
 
         return patientCaseRepository.findAll(specification);
     }
+    @Override
+    public Page<PatientCase> findPatients(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("incidentDate").descending());
+        PatientStatus patientStatus = (status != null && !status.isEmpty()) ? PatientStatus.valueOf(status) : null;
+        return patientCaseRepository.searchPatients(hospitalId, patientStatus, fromDate, toDate, pageable);
+}
 }

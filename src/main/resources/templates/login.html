@@ -37,17 +37,21 @@
         <div class="col-md-6 login-right-form">
             <div class="form-title-login">Đăng nhập</div>
 
-            <form th:action="@{/account}" method="GET">
+            <div th:if="${param.error}" class="alert alert-danger">
+                Tên đăng nhập hoặc mật khẩu không chính xác!
+            </div>
+
+            <form th:action="@{/login}" method="POST">
 
                 <div class="mb-3">
                     <label class="form-label login-label-custom">Tên đăng nhập</label>
-                    <input type="text" class="form-control login-input-custom" placeholder="Nhập tên đăng nhập" required>
+                    <input type="text" name="username" class="form-control login-input-custom" placeholder="Nhập tên đăng nhập" required>
                 </div>
 
                 <div class="mb-4">
                     <label class="form-label login-label-custom">Mật khẩu</label>
                     <div class="password-wrapper-custom">
-                        <input type="password" id="inputPassword" class="form-control login-input-custom" placeholder="Nhập mật khẩu" required>
+                        <input type="password" name="password" id="inputPassword" class="form-control login-input-custom" placeholder="Nhập mật khẩu" required>
                         <i class="bi bi-eye-slash toggle-eye-icon" id="togglePasswordBtn" onclick="handleTogglePasswordView()"></i>
                     </div>
                 </div>
@@ -74,11 +78,9 @@
 
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            // Đổi icon từ mắt gạch chéo sang mắt mở
             toggleIcon.classList.replace('bi-eye-slash', 'bi-eye');
         } else {
             passwordInput.type = 'password';
-            // Đổi ngược lại
             toggleIcon.classList.replace('bi-eye', 'bi-eye-slash');
         }
     }

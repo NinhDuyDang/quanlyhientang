@@ -30,18 +30,15 @@ public class DashboardRestController {
 
         List<PatientCase> filteredCases = patientCaseService.search(hospitalId, status, fromDate, toDate);
 
-        // 2. Tính toán lại số liệu cho 4 thẻ điểm dựa trên danh sách đã lọc
         long total = filteredCases.size();
         long risk = filteredCases.stream().filter(c -> c.getStatus() == PatientStatus.BRAIN_DEATH_1).count();
         long confirmed = filteredCases.stream().filter(c -> c.getStatus() == PatientStatus.BRAIN_DEATH_2).count();
         long notEligible = filteredCases.stream().filter(c -> c.getStatus() == PatientStatus.BRAIN_DEATH_3).count();
 
-        // 3. Gom nhóm dữ liệu mới cho Biểu đồ Cột Bệnh viện dựa trên danh sách đã lọc
         Map<String, Long> hospitalChartData = filteredCases.stream()
                 .filter(c -> c.getHospital() != null)
                 .collect(Collectors.groupingBy(c -> c.getHospital().getName(), Collectors.counting()));
 
-        // 4. Gom nhóm dữ liệu mới cho Biểu đồ Tròn Trạng thái dựa trên danh sách đã lọc
         Map<String, Long> statusChartData = filteredCases.stream()
                 .filter(c -> c.getStatus() != null)
                 .collect(Collectors.groupingBy(c -> c.getStatus().name(), Collectors.counting()));

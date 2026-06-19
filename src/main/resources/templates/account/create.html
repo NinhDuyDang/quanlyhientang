@@ -16,33 +16,31 @@
     </div>
 
     <div class="card form-container-card">
-        <form th:action="@{/account}" method="GET">
+        <form th:action="@{/account/create}" method="POST" th:object="${userRequest}">
             <div class="row g-4">
                 <div class="col-md-6">
                     <label class="form-label form-label-custom">Tên đăng nhập <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control form-control-custom" placeholder="Nhập tên đăng nhập duy nhất" required>
+                    <input type="text" th:field="*{username}" name="username" class="form-control form-control-custom" placeholder="Nhập tên đăng nhập" required>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label form-label-custom">Mật khẩu ban đầu <span class="text-danger">*</span></label>
-                    <input type="password" class="form-control form-control-custom" placeholder="Nhập mật khẩu tài khoản" required>
+                    <input type="password" th:field="*{password}" name="password" class="form-control form-control-custom" placeholder="Nhập mật khẩu" required>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label form-label-custom">Vai trò hệ thống <span class="text-danger">*</span></label>
-                    <select class="form-select form-control-custom" required>
+                    <select th:field="*{role}" name="role" class="form-select form-control-custom" required>
                         <option value="ADMIN">ADMIN - Ban quản trị trung tâm</option>
-                        <option value="HOSPITAL">HOSPITAL - Điều phối viên bệnh viện</option>
+                        <option value="STAFF">STAFF - Điều phối viên bệnh viện</option>
                     </select>
                 </div>
 
                 <div class="col-md-6">
                     <label class="form-label form-label-custom">Bệnh viện liên kết</label>
-                    <select class="form-select form-control-custom">
-                        <option value="">-- Tài khoản tự do (Admin Trung tâm) --</option>
-                        <option>Bệnh viện Bạch Mai</option>
-                        <option>Bệnh viện Chợ Rẫy</option>
-                        <option>Bệnh viện Việt Đức</option>
+                    <select th:field="*{hospitalId}" name="hospitalId" class="form-select form-control-custom">
+                        <option value="">-- Chọn bệnh viện (Nếu là Staff) --</option>
+                        <option th:each="h : ${hospitals}" th:value="${h.id}" th:text="${h.name}">Bệnh viện</option>
                     </select>
                 </div>
             </div>

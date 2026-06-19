@@ -1,36 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // 1. Cấu hình bảng màu đa dạng cho biểu đồ
+    const colorPalette = [
+        "#0d6efd", "#20c997", "#ffc107", "#dc3545", "#6f42c1",
+        "#fd7e14", "#0dcaf0", "#6610f2", "#d63384", "#adb5bd"
+    ];
 
     // ================= 1. BIỂU ĐỒ XU HƯỚNG (LINE CHART) =================
     const lineCanvas = document.getElementById("lineChart");
     if (lineCanvas) {
-        const lineLabels = ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"];
-        const lineData = typeof serverLineChartData !== 'undefined' ? serverLineChartData : [];
-
         new Chart(lineCanvas, {
             type: "line",
             data: {
-                labels: lineLabels,
+                labels: ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12"],
                 datasets: [{
                     label: "Số ca bệnh",
-                    data: lineData,
+                    data: typeof serverLineChartData !== 'undefined' ? serverLineChartData : [],
                     borderColor: "#0d6efd",
                     backgroundColor: "rgba(13, 110, 253, 0.05)",
-                    fill: true,
-                    tension: 0.3,
-                    borderWidth: 2
+                    fill: true, tension: 0.3, borderWidth: 2
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-                    x: { grid: { display: false } }
-                }
-            }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
     }
 
@@ -47,113 +37,78 @@ document.addEventListener("DOMContentLoaded", function () {
                 datasets: [{
                     label: "Số ca",
                     data: barData,
-                    backgroundColor: "#20c997",
-                    borderRadius: 4,
-                    barThickness: 25
+                    backgroundColor: colorPalette.slice(0, barData.length), // Đa màu sắc
+                    borderRadius: 4, barThickness: 25
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { display: false }
-                },
-                scales: {
-                    y: { beginAtZero: true, grid: { color: '#f1f5f9' } },
-                    x: { grid: { display: false } }
-                }
-            }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
     }
 
     // ================= 3. BIỂU ĐỒ TRẠNG THÁI (PIE CHART) =================
     const pieCanvas = document.getElementById("pieChart");
     if (pieCanvas) {
-        const translateLabels = (labels) => {
-            return labels.map(label => {
-                if (label === 'BRAIN_DEATH_1') return 'Chết não lần 1 ';
-                if (label === 'BRAIN_DEATH_2') return 'Chết não lần 2';
-                if (label === 'BRAIN_DEATH_3') return 'Chết não lần 3';
-                return label;
-            });
-        };
+        const translateLabels = (labels) => labels.map(l => ({
+            'BRAIN_DEATH_1': 'Chết não lần 1',
+            'BRAIN_DEATH_2': 'Chết não lần 2',
+            'BRAIN_DEATH_3': 'Chết não lần 3'
+        }[l] || l));
 
         const rawLabels = typeof serverPieLabels !== 'undefined' ? serverPieLabels : [];
-        const vietnameseLabels = translateLabels(rawLabels);
         const pieData = typeof serverPieValues !== 'undefined' ? serverPieValues : [];
 
         new Chart(pieCanvas, {
             type: "pie",
             data: {
-                labels: vietnameseLabels,
+                labels: translateLabels(rawLabels),
                 datasets: [{
                     data: pieData,
-                    backgroundColor: ["#ffc107", "#198754", "#dc3545"],
-                    borderWidth: 2,
-                    borderColor: '#ffffff'
+                    backgroundColor: ["#ffc107", "#dc3545", "#6f42c1"],
+                    borderWidth: 2, borderColor: '#ffffff'
                 }]
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                        labels: { boxWidth: 15, font: { size: 12 } }
-                    }
-                }
-            }
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'right' } } }
         });
     }
 });
 
 // ================= 4. HÀM XỬ LÝ BỘ LỌC TÌM KIẾM =================
-// Thay thế hàm applyFilter() cũ bằng hàm tương tác API thời gian thực này:
 function applyFilter() {
-    // 1. Thu thập dữ liệu từ các ô nhập bộ lọc trên giao diện
-    const hospitalId = document.getElementById("hospital").value;
-    const status = document.getElementById("status").value;
-    const fromDate = document.getElementById("fromDate").value;
-    const toDate = document.getElementById("toDate").value;
+    const params = new URLSearchParams({
+        hospitalId: document.getElementById("hospital").value,
+        status: document.getElementById("status").value,
+        fromDate: document.getElementById("fromDate").value,
+        toDate: document.getElementById("toDate").value
+    });
 
-    // 2. Tạo chuỗi URL chứa tham số lọc động
-    let url = `/api/dashboard/filter?`;
-    if (hospitalId !== 'all') url += `hospitalId=${hospitalId}&`;
-    if (status !== 'all') url += `status=${status}&`;
-    if (fromDate) url += `fromDate=${fromDate}&`;
-    if (toDate) url += `toDate=${toDate}`;
-
-    // 3. Gửi yêu cầu ngầm AJAX lên hệ thống Backend
-    fetch(url)
+    fetch(`/api/dashboard/filter?${params.toString()}`)
         .then(response => response.json())
         .then(data => {
-            // A. Cập nhật số hiển thị trực tiếp trên 4 Thẻ Card đầu trang bằng JS
-            document.querySelector(".stat-card h2.text-primary").innerText = data.totalCases;
-            document.querySelector(".stat-card h2.text-warning").innerText = data.riskCases;
-            document.querySelector(".stat-card h2.text-success").innerText = data.confirmedCases;
-            document.querySelector(".stat-card h2.text-danger").innerText = data.notEligibleCases;
+            // Cập nhật thẻ Card
+            document.querySelector(".stat-card h2.text-primary").innerText = data.totalCases || 0;
+            document.querySelector(".stat-card h2.text-warning").innerText = data.riskCases || 0;
+            document.querySelector(".stat-card h2.text-success").innerText = data.confirmedCases || 0;
+            document.querySelector(".stat-card h2.text-danger").innerText = data.notEligibleCases || 0;
 
-            // B. Vẽ lại Biểu đồ Cột Bệnh viện (Bar Chart) với dữ liệu mới
-            const barChartInstance = Chart.getChart("barChart");
-            if (barChartInstance) {
-                barChartInstance.data.labels = data.hospitalLabels;
-                barChartInstance.data.datasets[0].data = data.hospitalValues;
-                barChartInstance.update(); // Lệnh cập nhật làm mới biểu đồ
+            // Cập nhật Bar Chart (Đa màu & Dữ liệu mới)
+            const barChart = Chart.getChart("barChart");
+            if (barChart) {
+                barChart.data.labels = data.hospitalLabels;
+                barChart.data.datasets[0].data = data.hospitalValues;
+                const colors = ["#0d6efd", "#20c997", "#ffc107", "#dc3545", "#6f42c1", "#fd7e14"];
+                barChart.data.datasets[0].backgroundColor = colors.slice(0, data.hospitalValues.length);
+                barChart.update();
             }
 
-            // C. Vẽ lại Biểu đồ Tròn Trạng thái (Pie Chart) với dữ liệu mới
-            const pieChartInstance = Chart.getChart("pieChart");
-            if (pieChartInstance) {
-                const translateLabels = (labels) => labels.map(l => {
-                    if (l === 'BRAIN_DEATH_1') return 'Chết não lần 1 ';
-                    if (l === 'BRAIN_DEATH_2') return 'Chết não lần 2';
-                    if (l === 'BRAIN_DEATH_3') return 'Chết não lần 3';
-                    return l;
-                });
-                pieChartInstance.data.labels = translateLabels(Object.keys(data.statusMap));
-                pieChartInstance.data.datasets[0].data = Object.values(data.statusMap);
-                pieChartInstance.update(); // Lệnh cập nhật làm mới biểu đồ
+            // Cập nhật Pie Chart (Nhãn tiếng Việt & Dữ liệu mới)
+            const pieChart = Chart.getChart("pieChart");
+            if (pieChart) {
+                const labelsMap = { 'BRAIN_DEATH_1': 'Chết não lần 1', 'BRAIN_DEATH_2': 'Chết não lần 2', 'BRAIN_DEATH_3': 'Chết não lần 3' };
+                const rawKeys = Object.keys(data.statusMap);
+                pieChart.data.labels = rawKeys.map(k => labelsMap[k] || k);
+                pieChart.data.datasets[0].data = Object.values(data.statusMap);
+                pieChart.update();
             }
         })
-        .catch(error => console.error("Lỗi hệ thống khi lọc dữ liệu:", error));
+        .catch(err => console.error("Lỗi:", err));
 }

@@ -45,7 +45,9 @@ public class PatientCase {
 
     @Column(length = 1000)
     private String note;
-
+    // Trong file PatientCase.java
+    @Column(name = "patient_name", nullable = false)
+    private String patientName;
     private LocalDate incidentDate;
 
     private LocalDateTime createdAt;
