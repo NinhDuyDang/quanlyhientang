@@ -123,12 +123,15 @@ body{
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
-    font-size: 3rem; /* Bạn có thể tăng lên 4rem nếu muốn to hơn */
+
+    /* Đã chỉnh sửa kích thước nhỏ hơn ở đây */
+    font-size: 1.5rem;
+
     font-weight: 600;
-    color: rgba(0, 0, 0, 0.06); /* Độ mờ vừa phải, đủ để thấy mà không che dữ liệu */
-    pointer-events: none; /* Rất quan trọng: không chặn thao tác click */
-    z-index: 1; /* Nằm trên nền nhưng dưới các thành phần tương tác */
+    color: rgba(0, 0, 0, 0.06);
+    pointer-events: none;
+    z-index: 1;
     white-space: nowrap;
     user-select: none;
-    letter-spacing: 2px; /* Tạo khoảng cách chữ cho chuyên nghiệp */
+    letter-spacing: 2px;
 }
