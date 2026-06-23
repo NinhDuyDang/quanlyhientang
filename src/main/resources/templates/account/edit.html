@@ -1,3 +1,117 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      th:replace="~{fragments/main-layout :: layout(~{:: .account-edit-block}, 'Chỉnh sửa tài khoản', ~{:: .page-css}, ~{})}">-->
+<!--<head>-->
+<!--    <th:block class="page-css">-->
+<!--        <link rel="stylesheet" th:href="@{/css/account.css}">-->
+<!--    </th:block>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--<div class="account-edit-block">-->
+<!--    <div class="mb-3 mt-2">-->
+<!--        <a th:href="@{/account}"-->
+<!--           class="text-decoration-none text-muted d-inline-flex align-items-center gap-1"-->
+<!--           style="font-size: 14px;">-->
+<!--            <i class="bi bi-arrow-left"></i> Quay lại danh sách-->
+<!--        </a>-->
+<!--    </div>-->
+
+<!--    <div class="card form-container-card">-->
+<!--        <form th:action="@{/account/edit/{id}(id=${user.id})}" method="POST">-->
+
+<!--            <input type="hidden" name="id" th:value="${user.id}">-->
+
+<!--            <div class="row g-4">-->
+
+<!--                <div class="col-md-6">-->
+<!--                    <label class="form-label form-label-custom">-->
+<!--                        Tên đăng nhập-->
+<!--                    </label>-->
+<!--                    <input type="text"-->
+<!--                           name="username"-->
+<!--                           class="form-control form-control-custom"-->
+<!--                           th:value="${user.username}"-->
+<!--                           required>-->
+<!--                </div>-->
+
+<!--                <div class="col-md-6">-->
+<!--                    <label class="form-label form-label-custom">-->
+<!--                        Mật khẩu mới-->
+<!--                    </label>-->
+<!--                    <input type="password"-->
+<!--                           name="password"-->
+<!--                           class="form-control form-control-custom"-->
+<!--                           placeholder="Để trống nếu không thay đổi">-->
+<!--                </div>-->
+
+<!--                <div class="col-md-6">-->
+<!--                    <label class="form-label form-label-custom">-->
+<!--                        Vai trò hệ thống *-->
+<!--                    </label>-->
+
+<!--                    <select name="role"-->
+<!--                            class="form-select form-control-custom"-->
+<!--                            required>-->
+
+<!--                        <option value="ADMIN"-->
+<!--                                th:selected="${user.role.name() == 'ADMIN'}">-->
+<!--                            ADMIN - Ban quản trị trung tâm-->
+<!--                        </option>-->
+
+<!--                        <option value="STAFF"-->
+<!--                                th:selected="${user.role.name() == 'STAFF'}">-->
+<!--                            STAFF - Điều phối viên bệnh viện-->
+<!--                        </option>-->
+
+<!--                    </select>-->
+<!--                </div>-->
+
+<!--                <div class="col-md-6">-->
+<!--                    <label class="form-label form-label-custom">-->
+<!--                        Bệnh viện liên kết-->
+<!--                    </label>-->
+
+<!--                    <select name="hospitalId"-->
+<!--                            class="form-select form-control-custom">-->
+
+
+<!--                        <option th:each="h : ${hospitals}"-->
+<!--                                th:value="${h.id}"-->
+<!--                                th:text="${h.name}"-->
+<!--                                th:selected="${user.hospital != null && user.hospital.id == h.id}">-->
+<!--                        </option>-->
+
+<!--                    </select>-->
+<!--                </div>-->
+
+<!--            </div>-->
+
+<!--            <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">-->
+
+<!--                <a th:href="@{/account}"-->
+<!--                   class="btn btn-light border px-4 py-2"-->
+<!--                   style="font-size: 14px; border-radius: 6px;">-->
+<!--                    Hủy bỏ-->
+<!--                </a>-->
+
+<!--                <button type="submit"-->
+<!--                        class="btn btn-primary px-4 py-2"-->
+<!--                        style="font-size: 14px; border-radius: 6px; background-color: #0d6efd; border: none;">-->
+<!--                    <i class="bi bi-save me-1"></i>-->
+<!--                    Cập nhật thay đổi-->
+<!--                </button>-->
+
+<!--            </div>-->
+
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/main-layout :: layout(~{:: .account-edit-block}, 'Chỉnh sửa tài khoản', ~{:: .page-css}, ~{})}">
@@ -10,106 +124,76 @@
 
 <div class="account-edit-block">
     <div class="mb-3 mt-2">
-        <a th:href="@{/account}"
-           class="text-decoration-none text-muted d-inline-flex align-items-center gap-1"
-           style="font-size: 14px;">
+        <a th:href="@{/account}" class="text-decoration-none text-muted d-inline-flex align-items-center gap-1" style="font-size: 14px;">
             <i class="bi bi-arrow-left"></i> Quay lại danh sách
         </a>
     </div>
 
     <div class="card form-container-card">
         <form th:action="@{/account/edit/{id}(id=${user.id})}" method="POST">
-
             <input type="hidden" name="id" th:value="${user.id}">
 
             <div class="row g-4">
-
                 <div class="col-md-6">
-                    <label class="form-label form-label-custom">
-                        Tên đăng nhập
-                    </label>
-                    <input type="text"
-                           name="username"
-                           class="form-control form-control-custom"
-                           th:value="${user.username}"
-                           required>
+                    <label class="form-label form-label-custom">Tên đăng nhập</label>
+                    <input type="text" name="username" class="form-control form-control-custom" th:value="${user.username}" required>
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label form-label-custom">
-                        Mật khẩu mới
-                    </label>
-                    <input type="password"
-                           name="password"
-                           class="form-control form-control-custom"
-                           placeholder="Để trống nếu không thay đổi">
+                    <label class="form-label form-label-custom">Mật khẩu mới</label>
+                    <input type="password" name="password" class="form-control form-control-custom" placeholder="Để trống nếu không thay đổi">
                 </div>
 
                 <div class="col-md-6">
-                    <label class="form-label form-label-custom">
-                        Vai trò hệ thống *
-                    </label>
-
-                    <select name="role"
-                            class="form-select form-control-custom"
-                            required>
-
-                        <option value="ADMIN"
-                                th:selected="${user.role.name() == 'ADMIN'}">
-                            ADMIN - Ban quản trị trung tâm
-                        </option>
-
-                        <option value="STAFF"
-                                th:selected="${user.role.name() == 'STAFF'}">
-                            STAFF - Điều phối viên bệnh viện
-                        </option>
-
+                    <label class="form-label form-label-custom">Vai trò hệ thống *</label>
+                    <select name="role" id="roleSelect" class="form-select form-control-custom" required>
+                        <option value="ADMIN" th:selected="${user.role.name() == 'ADMIN'}">ADMIN - Ban quản trị trung tâm</option>
+                        <option value="STAFF" th:selected="${user.role.name() == 'STAFF'}">STAFF - Điều phối viên bệnh viện</option>
                     </select>
                 </div>
 
-                <div class="col-md-6">
-                    <label class="form-label form-label-custom">
-                        Bệnh viện liên kết
-                    </label>
-
-                    <select name="hospitalId"
-                            class="form-select form-control-custom">
-
-                        <option value="">
-                            -- Không trực thuộc --
-                        </option>
-
+                <div class="col-md-6" id="hospitalField">
+                    <label class="form-label form-label-custom">Bệnh viện liên kết</label>
+                    <select name="hospitalId" id="hospitalSelect" class="form-select form-control-custom">
+                        <option value="">-- Chọn bệnh viện( nếu là staff ) --</option>
                         <option th:each="h : ${hospitals}"
                                 th:value="${h.id}"
                                 th:text="${h.name}"
                                 th:selected="${user.hospital != null && user.hospital.id == h.id}">
                         </option>
-
                     </select>
                 </div>
-
             </div>
 
             <div class="d-flex justify-content-end gap-3 mt-5 pt-3 border-top">
-
-                <a th:href="@{/account}"
-                   class="btn btn-light border px-4 py-2"
-                   style="font-size: 14px; border-radius: 6px;">
-                    Hủy bỏ
-                </a>
-
-                <button type="submit"
-                        class="btn btn-primary px-4 py-2"
-                        style="font-size: 14px; border-radius: 6px; background-color: #0d6efd; border: none;">
-                    <i class="bi bi-save me-1"></i>
-                    Cập nhật thay đổi
+                <a th:href="@{/account}" class="btn btn-light border px-4 py-2" style="font-size: 14px; border-radius: 6px;">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary px-4 py-2" style="font-size: 14px; border-radius: 6px; background-color: #0d6efd; border: none;">
+                    <i class="bi bi-save me-1"></i> Cập nhật thay đổi
                 </button>
-
             </div>
-
         </form>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('roleSelect');
+        const hospitalField = document.getElementById('hospitalField');
+        const hospitalSelect = document.getElementById('hospitalSelect');
+
+        function toggleHospitalField() {
+            if (roleSelect.value === 'ADMIN') {
+                hospitalField.style.display = 'none';
+                hospitalSelect.value = ""; // Reset giá trị
+            } else {
+                hospitalField.style.display = 'block';
+            }
+        }
+
+        roleSelect.addEventListener('change', toggleHospitalField);
+        toggleHospitalField(); // Chạy khi load trang
+    });
+</script>
 
 </body>
 </html>

@@ -116,6 +116,29 @@
         </form>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleSelect = document.getElementById('roleSelect');
+        const hospitalField = document.getElementById('hospitalField');
+        const hospitalSelect = hospitalField.querySelector('select');
 
+        function toggleHospitalField() {
+            // Nếu chọn ADMIN, ẩn trường và bỏ chọn giá trị
+            if (roleSelect.value === 'ADMIN') {
+                hospitalField.style.display = 'none';
+                hospitalSelect.value = "";
+            } else {
+                // Nếu chọn STAFF, hiển thị trường
+                hospitalField.style.display = 'block';
+            }
+        }
+
+        // Lắng nghe sự kiện thay đổi
+        roleSelect.addEventListener('change', toggleHospitalField);
+
+        // Chạy hàm ngay khi tải trang để xử lý trường hợp khi chỉnh sửa
+        toggleHospitalField();
+    });
+</script>
 </body>
 </html>

@@ -24,8 +24,7 @@ public class PatientCase {
 
     @Column(unique = true, nullable = false)
     private String caseCode;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // Dùng EAGER để chắc chắn load luôn Hospital
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
 

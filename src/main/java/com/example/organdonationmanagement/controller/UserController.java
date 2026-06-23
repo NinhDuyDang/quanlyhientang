@@ -40,9 +40,20 @@ public class UserController {
         return "account/create";
     }
 
+//    @PostMapping("/account/create")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    public String processCreateUser(@ModelAttribute("userRequest") UserRequest request) {
+//        userService.create(request);
+//        return "redirect:/account";
+//    }
+
     @PostMapping("/account/create")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String processCreateUser(@ModelAttribute("userRequest") UserRequest request) {
+        // Chỉ cần thêm logic kiểm tra này
+        if ("ADMIN".equals(request.getRole())) {
+            request.setHospitalId(null);
+        }
         userService.create(request);
         return "redirect:/account";
     }
@@ -56,12 +67,22 @@ public class UserController {
         return "account/edit";
     }
 
-    @PostMapping("/account/edit/{id}")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String processEditUser(@PathVariable("id") Long id, @ModelAttribute("userRequest") UserRequest request) {
-        userService.update(id, request);
-        return "redirect:/account";
+//    @PostMapping("/account/edit/{id}")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    public String processEditUser(@PathVariable("id") Long id, @ModelAttribute("userRequest") UserRequest request) {
+//        userService.update(id, request);
+//        return "redirect:/account";
+//    }
+@PostMapping("/account/edit/{id}")
+@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+public String processEditUser(@PathVariable("id") Long id, @ModelAttribute("userRequest") UserRequest request) {
+    // Chỉ cần thêm logic kiểm tra này
+    if ("ADMIN".equals(request.getRole())) {
+        request.setHospitalId(null);
     }
+    userService.update(id, request);
+    return "redirect:/account";
+}
 
     @PostMapping("/account/toggle-status/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

@@ -1,8 +1,31 @@
+//package com.example.organdonationmanagement.service;
+//
+//import com.example.organdonationmanagement.dto.request.PatientCaseRequest;
+//import com.example.organdonationmanagement.entity.PatientCase;
+//import org.springframework.data.domain.Page;
+//
+//import java.time.LocalDate;
+//import java.util.List;
+//
+//public interface PatientCaseService {
+//    List<PatientCase> getAll();
+//    PatientCase getById(Long id);
+//    PatientCase create(PatientCaseRequest request);
+//    PatientCase update(Long id, PatientCaseRequest request);
+//    void delete(Long id);
+//    List<PatientCase> search(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate);
+//
+//    Page<PatientCase> findPatients(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate, int page, int size);
+//}
+
+
+
 package com.example.organdonationmanagement.service;
 
 import com.example.organdonationmanagement.dto.request.PatientCaseRequest;
 import com.example.organdonationmanagement.entity.PatientCase;
 import org.springframework.data.domain.Page;
+import org.springframework.lang.Nullable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -13,7 +36,6 @@ public interface PatientCaseService {
     PatientCase create(PatientCaseRequest request);
     PatientCase update(Long id, PatientCaseRequest request);
     void delete(Long id);
-    List<PatientCase> search(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate);
-
-    Page<PatientCase> findPatients(Long hospitalId, String status, LocalDate fromDate, LocalDate toDate, int page, int size);
+    List<PatientCase> search(@Nullable Long hospitalId, String status, LocalDate fromDate, LocalDate toDate);
+    Page<PatientCase> findPatients(@Nullable Long hospitalId, String status, LocalDate fromDate, LocalDate toDate, int page, int size);
 }

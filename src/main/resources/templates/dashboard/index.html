@@ -8,11 +8,37 @@
 </head>
 <body>
 <div class="main-content-block">
+<!--    <div class="row g-3">-->
+<!--        <div class="col-md-3"><div class="card stat-card"><h2 class="text-primary" id="text-totalCases" th:text="${totalCases}">0</h2><span>Tổng số ca</span></div></div>-->
+<!--        <div class="col-md-3"><div class="card stat-card"><h2 class="text-warning" id="text-riskCases" th:text="${riskCases}">0</h2><span>Nguy cơ</span></div></div>-->
+<!--        <div class="col-md-3"><div class="card stat-card"><h2 class="text-success" id="text-confirmedCases" th:text="${confirmedCases}">0</h2><span>Xác nhận</span></div></div>-->
+<!--        <div class="col-md-3"><div class="card stat-card"><h2 class="text-danger" id="text-notEligibleCases" th:text="${notEligibleCases}">0</h2><span>Không đủ</span></div></div>-->
+<!--    </div>-->
     <div class="row g-3">
-        <div class="col-md-3"><div class="card stat-card"><h2 class="text-primary" id="text-totalCases" th:text="${totalCases}">0</h2><span>Tổng số ca</span></div></div>
-        <div class="col-md-3"><div class="card stat-card"><h2 class="text-warning" id="text-riskCases" th:text="${riskCases}">0</h2><span>Nguy cơ</span></div></div>
-        <div class="col-md-3"><div class="card stat-card"><h2 class="text-success" id="text-confirmedCases" th:text="${confirmedCases}">0</h2><span>Xác nhận</span></div></div>
-        <div class="col-md-3"><div class="card stat-card"><h2 class="text-danger" id="text-notEligibleCases" th:text="${notEligibleCases}">0</h2><span>Không đủ</span></div></div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-primary" id="text-coKhaNang" th:text="${metrics.CO_KHA_NANG ?: 0}">0</h2>
+                <span>Có khả năng</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-success" id="text-gdDongY" th:text="${metrics.GD_DONG_Y ?: 0}">0</h2>
+                <span>Gia đình đồng ý</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-danger" id="text-gdTuChoi" th:text="${metrics.GD_TU_CHOI ?: 0}">0</h2>
+                <span>Gia đình từ chối</span>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <h2 class="text-warning" id="text-dangCho" th:text="${metrics.DANG_CHO ?: 0}">0</h2>
+                <span>Đang chờ</span>
+            </div>
+        </div>
     </div>
 
     <div class="row mt-4">

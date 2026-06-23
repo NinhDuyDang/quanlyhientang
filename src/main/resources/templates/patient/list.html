@@ -1,3 +1,138 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org"-->
+<!--      th:replace="~{fragments/main-layout :: layout(~{:: .patient-content-block}, 'Danh sách ca bệnh', ~{:: .page-css}, ~{:: .page-js})}">-->
+
+<!--<head>-->
+<!--    <th:block class="page-css">-->
+<!--        <link rel="stylesheet" th:href="@{/css/patient.css}">-->
+<!--    </th:block>-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--<div class="patient-content-block">-->
+<!--    <form th:action="@{/patient}" method="get" class="filter-container mb-4 mt-2">-->
+<!--        <div class="row g-3 align-items-end">-->
+<!--            <div class="col-md-2">-->
+<!--                <div class="filter-label">Bệnh viện</div>-->
+<!--                <select name="hospitalId" class="form-select form-control-custom">-->
+<!--                    <option value="">Tất cả</option>-->
+<!--                    <option th:each="h : ${hospitals}" th:value="${h.id}" th:text="${h.name}"-->
+<!--                            th:selected="${hospitalId == h.id}"></option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="col-md-2">-->
+<!--                <div class="filter-label">Trạng thái</div>-->
+<!--                <select name="status" class="form-select form-control-custom">-->
+<!--                    <option value="">Tất cả</option>-->
+<!--                    <option value="BRAIN_DEATH_1" th:selected="${status == 'BRAIN_DEATH_1'}">Chết não lần 1</option>-->
+<!--                    <option value="BRAIN_DEATH_2" th:selected="${status == 'BRAIN_DEATH_2'}">Chết não lần 2</option>-->
+<!--                    <option value="BRAIN_DEATH_3" th:selected="${status == 'BRAIN_DEATH_3'}">Chết não lần 3</option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--            <div class="col-md-2">-->
+<!--                <div class="filter-label">Từ ngày</div>-->
+<!--                <input type="date" name="fromDate" th:value="${fromDate}" class="form-control form-control-custom">-->
+<!--            </div>-->
+<!--            <div class="col-md-2">-->
+<!--                <div class="filter-label">Đến ngày</div>-->
+<!--                <input type="date" name="toDate" th:value="${toDate}" class="form-control form-control-custom">-->
+<!--            </div>-->
+<!--            <div class="col-md-4 d-flex gap-2">-->
+<!--                <button type="submit" class="btn btn-primary w-100" style="padding: 9px;">Tìm kiếm</button>-->
+<!--                <a th:href="@{/patient/create}"-->
+<!--                   class="btn btn-success d-flex align-items-center justify-content-center px-3"><i-->
+<!--                        class="bi bi-plus-lg"></i></a>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </form>-->
+
+<!--    <div class="card patient-card">-->
+<!--        <div class="table-responsive">-->
+<!--            <table class="table table-custom mb-0">-->
+<!--                <thead>-->
+<!--                <tr>-->
+<!--                    <th>Mã ca bệnh</th>-->
+<!--                    <th>Bệnh nhân</th>-->
+<!--                    <th>Bệnh viện</th>-->
+<!--                    <th>Tuổi</th>-->
+<!--                    <th>Giới tính</th>-->
+<!--                    <th>Nguyên nhân</th>-->
+<!--                    <th>Trạng thái</th>-->
+<!--                    <th>Khả năng hiến</th>-->
+<!--                    <th>Ngày nhập</th>-->
+<!--                    <th class="text-center">Thao tác</th>-->
+<!--                </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                <tr th:each="pt : ${patients}">-->
+<!--                    <td class="fw-bold text-secondary" th:text="${pt.caseCode}"></td>-->
+<!--                    <td class="fw-bold text-dark" th:text="${pt.patientName}"></td>-->
+<!--                    <td th:text="${pt.hospital != null ? pt.hospital.name : 'N/A'}"></td>-->
+<!--                    <td th:text="${pt.birthYear}"></td>-->
+<!--                    <td th:text="${pt.gender != null ? (pt.gender.name() == 'MALE' ? 'Nam' : 'Nữ') : ''}"></td>-->
+<!--                    <td th:text="${pt.cause != null ? (pt.cause.name() == 'TRAFFIC_ACCIDENT' ? 'Tai nạn GT' : (pt.cause.name() == 'STROKE' ? 'Đột quỵ' : 'Chấn thương sọ não')) : ''}"></td>-->
+<!--                    <td>-->
+<!--                        <span class="badge-status"-->
+<!--                              th:classappend="${pt.status != null ? (pt.status.name() == 'BRAIN_DEATH_1' ? 'status-lvl1' : (pt.status.name() == 'BRAIN_DEATH_2' ? 'status-lvl2' : 'status-lvl3')) : ''}"-->
+<!--                              th:text="${pt.status != null ? (pt.status.name() == 'BRAIN_DEATH_1' ? 'Chết não lần 1' : (pt.status.name() == 'BRAIN_DEATH_2' ? 'Chết não lần 2' : 'Chết não lần 3')) : ''}">-->
+<!--                        </span>-->
+<!--                    </td>-->
+<!--                    <td th:text="${pt.donorStatus != null ? (pt.donorStatus.name() == 'POTENTIAL' ? 'Có khả năng' : 'Gia đình đồng ý') : ''}"></td>-->
+<!--                    <td th:text="${pt.incidentDate}"></td>-->
+<!--                    <td class="text-center">-->
+<!--                        <div class="d-flex justify-content-center gap-2">-->
+<!--                            <a th:href="@{/patient/edit/{id}(id=${pt.id})}" class="btn-action-edit"><i class="bi bi-pencil-fill"></i></a>-->
+<!--                            <button class="btn-action-delete" th:onclick="'confirmDelete(' + ${pt.id} + ')'"><i class="bi bi-trash-fill"></i></button>-->
+<!--                        </div>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                </tbody>-->
+<!--            </table>-->
+<!--        </div>-->
+
+<!--        <div class="d-flex justify-content-center mt-4 pb-3" th:if="${totalPages > 0}">-->
+<!--            <nav>-->
+<!--                <ul class="pagination pagination-custom mb-0">-->
+<!--                    <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">-->
+<!--                        <a class="page-link" th:href="@{/patient(page=${currentPage - 1}, hospitalId=${hospitalId}, status=${status}, fromDate=${fromDate}, toDate=${toDate})}">-->
+<!--                            <i class="bi bi-chevron-left"></i>-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item" th:each="i : ${#numbers.sequence(1, totalPages)}" th:classappend="${currentPage == i} ? 'active'">-->
+<!--                        <a class="page-link" th:href="@{/patient(page=${i}, hospitalId=${hospitalId}, status=${status}, fromDate=${fromDate}, toDate=${toDate})}" th:text="${i}"></a>-->
+<!--                    </li>-->
+<!--                    <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">-->
+<!--                        <a class="page-link" th:href="@{/patient(page=${currentPage + 1}, hospitalId=${hospitalId}, status=${status}, fromDate=${fromDate}, toDate=${toDate})}">-->
+<!--                            <i class="bi bi-chevron-right"></i>-->
+<!--                        </a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+<!--            </nav>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<th:block class="page-js">-->
+<!--    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>-->
+<!--    <script>-->
+<!--        function confirmDelete(id) {-->
+<!--            Swal.fire({-->
+<!--                title: 'Xác nhận xóa?',-->
+<!--                text: "Dữ liệu ca bệnh này sẽ bị xóa vĩnh viễn!",-->
+<!--                icon: 'warning',-->
+<!--                showCancelButton: true,-->
+<!--                confirmButtonColor: '#dc3545',-->
+<!--                confirmButtonText: 'Xóa ngay'-->
+<!--            }).then((result) => {-->
+<!--                if (result.isConfirmed) { window.location.href = '/patient/delete/' + id; }-->
+<!--            });-->
+<!--        }-->
+<!--    </script>-->
+<!--</th:block>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/main-layout :: layout(~{:: .patient-content-block}, 'Danh sách ca bệnh', ~{:: .page-css}, ~{:: .page-js})}">
@@ -78,7 +213,15 @@
                               th:text="${pt.status != null ? (pt.status.name() == 'BRAIN_DEATH_1' ? 'Chết não lần 1' : (pt.status.name() == 'BRAIN_DEATH_2' ? 'Chết não lần 2' : 'Chết não lần 3')) : ''}">
                         </span>
                     </td>
-                    <td th:text="${pt.donorStatus != null ? (pt.donorStatus.name() == 'POTENTIAL' ? 'Có khả năng' : 'Gia đình đồng ý') : ''}"></td>
+                    <td>
+                        <span th:switch="${pt.donorStatus != null ? pt.donorStatus.name() : ''}">
+                            <span th:case="'POTENTIAL'">Có khả năng</span>
+                            <span th:case="'FAMILY_ACCEPTED'">Gia đình đồng ý</span>
+                            <span th:case="'FAMILY_REJECTED'">Gia đình từ chối</span>
+                            <span th:case="'PENDING'">Đang chờ</span>
+                            <span th:case="*">N/A</span>
+                        </span>
+                    </td>
                     <td th:text="${pt.incidentDate}"></td>
                     <td class="text-center">
                         <div class="d-flex justify-content-center gap-2">

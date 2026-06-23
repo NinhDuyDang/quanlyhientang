@@ -1,3 +1,47 @@
+//package com.example.organdonationmanagement.controller;
+//
+//import com.example.organdonationmanagement.repository.HospitalRepository;
+//import com.example.organdonationmanagement.service.DashboardService;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.stereotype.Controller;
+//import org.springframework.ui.Model;
+//import org.springframework.web.bind.annotation.GetMapping;
+//import org.springframework.web.bind.annotation.RequestMapping;
+//
+//import java.util.Map;
+//
+//@Controller
+//@RequestMapping({"/", "/dashboard"})
+//@RequiredArgsConstructor
+//public class DashboardController {
+//
+//    private final DashboardService dashboardService;
+//    private final HospitalRepository hospitalRepository;
+//
+//    @GetMapping
+//    public String showDashboardPage(Model model) {
+//        model.addAttribute("activeMenu", "dashboard");
+//        model.addAttribute("title", "Bảng điều khiển");
+//
+//        Map<String, Long> metrics = dashboardService.getDashboardMetrics();
+//        model.addAttribute("totalCases", metrics.get("totalCases"));
+//        model.addAttribute("riskCases", metrics.get("riskCases"));
+//        model.addAttribute("confirmedCases", metrics.get("confirmedCases"));
+//        model.addAttribute("notEligibleCases", metrics.get("notEligibleCases"));
+//
+//        model.addAttribute("lineChartData", dashboardService.getMonthlyTrendData());
+//
+//        Map<String, Long> hospitalData = dashboardService.getHospitalChartData();
+//        model.addAttribute("hospitalLabels", hospitalData.keySet());
+//        model.addAttribute("hospitalValues", hospitalData.values());
+//
+//        model.addAttribute("statusPieMap", dashboardService.getStatusPieChartData());
+//
+//        model.addAttribute("hospitals", hospitalRepository.findAll());
+//
+//        return "dashboard/index";
+//    }
+//}
 package com.example.organdonationmanagement.controller;
 
 import com.example.organdonationmanagement.repository.HospitalRepository;
@@ -11,7 +55,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Map;
 
 @Controller
-@RequestMapping({"/", "/dashboard"})
+@RequestMapping("/dashboard")
 @RequiredArgsConstructor
 public class DashboardController {
 
@@ -23,12 +67,13 @@ public class DashboardController {
         model.addAttribute("activeMenu", "dashboard");
         model.addAttribute("title", "Bảng điều khiển");
 
+        // 1. Lấy dữ liệu metrics mới (Map đã có các key: CO_KHA_NANG, GD_DONG_Y, GD_TU_CHOI, DANG_CHO)
         Map<String, Long> metrics = dashboardService.getDashboardMetrics();
-        model.addAttribute("totalCases", metrics.get("totalCases"));
-        model.addAttribute("riskCases", metrics.get("riskCases"));
-        model.addAttribute("confirmedCases", metrics.get("confirmedCases"));
-        model.addAttribute("notEligibleCases", metrics.get("notEligibleCases"));
 
+        // 2. Truyền nguyên Map sang View để sử dụng linh hoạt
+        model.addAttribute("metrics", metrics);
+
+        // Các phần còn lại giữ nguyên
         model.addAttribute("lineChartData", dashboardService.getMonthlyTrendData());
 
         Map<String, Long> hospitalData = dashboardService.getHospitalChartData();
@@ -36,7 +81,6 @@ public class DashboardController {
         model.addAttribute("hospitalValues", hospitalData.values());
 
         model.addAttribute("statusPieMap", dashboardService.getStatusPieChartData());
-
         model.addAttribute("hospitals", hospitalRepository.findAll());
 
         return "dashboard/index";

@@ -41,6 +41,54 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
 
+//    @Override
+//    public User create(UserRequest request) {
+//        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+//            throw new RuntimeException("Tên đăng nhập '" + request.getUsername() + "' đã tồn tại!");
+//        }
+//
+//        Hospital hospital = null;
+//        if (request.getHospitalId() != null) {
+//            hospital = hospitalRepository.findById(request.getHospitalId())
+//                    .orElseThrow(() -> new RuntimeException("Hospital not found"));
+//        }
+//
+//        User user = User.builder()
+//                .username(request.getUsername())
+//                .password(passwordEncoder.encode(request.getPassword()))
+//                .role(Role.valueOf(request.getRole()))
+//                .hospital(hospital)
+//                .enabled(true)
+//                .build();
+//
+//        return userRepository.save(user);
+//    }
+//
+//    @Override
+//    public User update(Long id, UserRequest request) {
+//        User user = getById(id);
+//        Hospital hospital = null;
+//        if (request.getHospitalId() != null) {
+//            hospital = hospitalRepository.findById(request.getHospitalId())
+//                    .orElseThrow(() -> new RuntimeException("Hospital not found"));
+//        }
+//
+//        Optional<User> existedUser = userRepository.findByUsername(request.getUsername());
+//        if (existedUser.isPresent() && !existedUser.get().getId().equals(id)) {
+//            throw new RuntimeException("Tên đăng nhập '" + request.getUsername() + "' đã tồn tại!");
+//        }
+//
+//        user.setUsername(request.getUsername());
+//        if (request.getPassword() != null && !request.getPassword().isBlank()) {
+//            user.setPassword(passwordEncoder.encode(request.getPassword()));
+//        }
+//
+//        user.setRole(Role.valueOf(request.getRole()));
+//        user.setHospital(hospital);
+//
+//        return userRepository.save(user);
+//    }
+
     @Override
     public User create(UserRequest request) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
@@ -48,7 +96,8 @@ public class UserServiceImpl implements UserService {
         }
 
         Hospital hospital = null;
-        if (request.getHospitalId() != null) {
+        // Chỉ tìm và gán Hospital nếu không phải là ADMIN
+        if (!"ADMIN".equals(request.getRole()) && request.getHospitalId() != null) {
             hospital = hospitalRepository.findById(request.getHospitalId())
                     .orElseThrow(() -> new RuntimeException("Hospital not found"));
         }
@@ -57,7 +106,7 @@ public class UserServiceImpl implements UserService {
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.valueOf(request.getRole()))
-                .hospital(hospital)
+                .hospital(hospital) // Sẽ là null nếu là ADMIN
                 .enabled(true)
                 .build();
 
@@ -68,7 +117,9 @@ public class UserServiceImpl implements UserService {
     public User update(Long id, UserRequest request) {
         User user = getById(id);
         Hospital hospital = null;
-        if (request.getHospitalId() != null) {
+
+        // Chỉ tìm và gán Hospital nếu không phải là ADMIN
+        if (!"ADMIN".equals(request.getRole()) && request.getHospitalId() != null) {
             hospital = hospitalRepository.findById(request.getHospitalId())
                     .orElseThrow(() -> new RuntimeException("Hospital not found"));
         }
@@ -84,7 +135,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setRole(Role.valueOf(request.getRole()));
-        user.setHospital(hospital);
+        user.setHospital(hospital); // Sẽ gán null nếu là ADMIN, giúp "dọn dẹp" database
 
         return userRepository.save(user);
     }
