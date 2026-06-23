@@ -25,7 +25,7 @@ public class User {
     private String password;
     private boolean enabled = true;
 
-    @Enumerated(EnumType.STRING) // BẮT BUỘC ĐỂ LƯU CHỮ (VD: "ADMIN") THAY VÌ SỐ (VD: 0)
+    @Enumerated(EnumType.STRING)
     @Column(name = "role", length = 20)
     private Role role;
 
@@ -34,14 +34,12 @@ public class User {
     private Hospital hospital;
 
 
-    // --- CÁC TRƯỜNG MỚI CẦN THÊM ĐỂ LƯU THÔNG TIN CÁ NHÂN ---
-    private String fullName;      // Họ và tên
-    private Integer age;          // Tuổi
-    private String phoneNumber;   // Số điện thoại liên hệ
-    private String workAddress;   // Địa chỉ làm việc
-    private String avatarUrl;     // Đường dẫn ảnh đại diện (nếu bạn muốn lưu đường dẫn ảnh)
-    // -------------------------------------------------------
 
+    private String fullName;
+    private Integer age;
+    private String phoneNumber;
+    private String workAddress;
+    private String avatarUrl;
     private LocalDateTime createdAt;
 
     @PrePersist

@@ -13,7 +13,7 @@ public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     boolean existsByCode(String code);
 
-    // Lấy mã của bản ghi mới nhất (sắp xếp giảm dần theo mã)
+
     @Query(value = "SELECT code FROM hospitals ORDER BY code DESC LIMIT 1", nativeQuery = true)
     String findLastCode();
 

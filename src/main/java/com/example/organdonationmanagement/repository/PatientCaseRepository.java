@@ -30,7 +30,7 @@ public interface PatientCaseRepository extends JpaRepository<PatientCase, Long>,
             @Param("toDate") LocalDate toDate,
             Pageable pageable);
 
-    // Các hàm thống kê cũ
+
     @Query("SELECT p.hospital.name, COUNT(p) FROM PatientCase p GROUP BY p.hospital.name")
     List<Object[]> countCasesByHospital();
 

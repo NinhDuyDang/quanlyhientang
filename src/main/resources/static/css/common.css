@@ -117,3 +117,18 @@ body{
 .btn-primary{
     border-radius:10px;
 }
+
+.copyright-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 3rem; /* Bạn có thể tăng lên 4rem nếu muốn to hơn */
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.06); /* Độ mờ vừa phải, đủ để thấy mà không che dữ liệu */
+    pointer-events: none; /* Rất quan trọng: không chặn thao tác click */
+    z-index: 1; /* Nằm trên nền nhưng dưới các thành phần tương tác */
+    white-space: nowrap;
+    user-select: none;
+    letter-spacing: 2px; /* Tạo khoảng cách chữ cho chuyên nghiệp */
+}

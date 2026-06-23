@@ -17,10 +17,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User không tồn tại"));
-
-        // CHỈNH SỬA TẠI ĐÂY:
-        // 1. user.getRole().name() để chuyển từ Enum sang String
-        // 2. Thêm "ROLE_" vào trước để Spring Security hiểu đó là một Role
         String roleName = "ROLE_" + user.getRole().name();
 
         return new org.springframework.security.core.userdetails.User(

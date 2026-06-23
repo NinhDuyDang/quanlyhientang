@@ -21,7 +21,7 @@ public class UserController {
     private final UserService userService;
     private final HospitalService hospitalService;
 
-    // --- CÁC MÀN HÌNH QUẢN LÝ TÀI KHOẢN (ADMIN) ---
+
 
     @GetMapping("/account")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -77,7 +77,7 @@ public class UserController {
         return "redirect:/account";
     }
 
-    // --- MÀN HÌNH PROFILE (XEM THÔNG TIN) ---
+
 
     @GetMapping("/profile")
     public String showProfile(Principal principal, Model model) {
@@ -88,7 +88,7 @@ public class UserController {
         return "profile/profile";
     }
 
-    // --- MÀN HÌNH SETTINGS (CHỈNH SỬA) ---
+
 
     @GetMapping("/profile/settings")
     public String showSettings(Principal principal, Model model) {
@@ -104,15 +104,13 @@ public class UserController {
                                 @ModelAttribute ProfileUpdateRequest request,
                                 RedirectAttributes redirectAttributes) {
 
-        // Gọi Service xử lý cả dữ liệu và file upload
+
         userService.updateProfile(principal.getName(), request);
 
-        // Flash attribute để thông báo hiện 1 lần rồi mất sau khi reload
         redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!");
         return "redirect:/profile";
     }
 
-    // --- LOGIN ---
 
     @GetMapping("/login")
     public String showLoginPage() {

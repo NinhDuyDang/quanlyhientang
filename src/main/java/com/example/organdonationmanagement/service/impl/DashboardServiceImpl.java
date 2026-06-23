@@ -17,7 +17,7 @@ public class DashboardServiceImpl implements DashboardService {
     @Autowired
     private PatientCaseRepository patientCaseRepository;
 
-    // 1. Lấy số liệu thật cho 4 thẻ Card đầu trang (Quét bảng patient_cases)
+
     @Override
     public Map<String, Long> getDashboardMetrics() {
         Map<String, Long> metrics = new HashMap<>();
@@ -28,7 +28,7 @@ public class DashboardServiceImpl implements DashboardService {
         return metrics;
     }
 
-    // 2. Lấy dữ liệu 12 tháng từ Database (Quét trường createdAt của ca bệnh)
+
     @Override
     public int[] getMonthlyTrendData() {
         int[] monthlyTrend = new int[12];
@@ -43,7 +43,7 @@ public class DashboardServiceImpl implements DashboardService {
         return monthlyTrend;
     }
 
-    // 3. Thống kê số ca thực tế thuộc về từng Bệnh viện (Join bảng hospitals)
+
     @Override
     public Map<String, Long> getHospitalChartData() {
         Map<String, Long> hospitalData = new LinkedHashMap<>();
@@ -51,13 +51,10 @@ public class DashboardServiceImpl implements DashboardService {
         for (Object[] result : results) {
             String hospitalName = (String) result[0];
             Long count = ((Number) result[1]).longValue();
-            // Nếu ca bệnh chưa gán bệnh viện thì hiển thị "Chưa rõ BV"
             hospitalData.put(hospitalName != null ? hospitalName : "Chưa rõ BV", count);
         }
         return hospitalData;
     }
-
-    // 4. Thống kê nhóm trạng thái thực tế phục vụ biểu đồ Tròn
     @Override
     public Map<String, Long> getStatusPieChartData() {
         Map<String, Long> statusData = new HashMap<>();

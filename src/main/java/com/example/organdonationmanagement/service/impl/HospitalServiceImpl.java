@@ -22,11 +22,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public Page<Hospital> getAll(String keyword, int page, int size) {
-        // Cấu hình phân trang (Gom nhóm sắp xếp theo ID giảm dần hoặc createdAt giảm dần tùy thuộc thuộc tính DB của bạn)
-        // Lưu ý: Nếu Entity Hospital của bạn không có trường "createdAt", hãy sửa "createdAt" thành "id" để tránh lỗi sập hệ thống nhé!
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
-
-        // Gọi hàm tìm kiếm thông minh (Tự nhận diện từ khóa trống hoặc có giá trị)
         return hospitalRepository.searchHospitals(keyword, pageable);
     }
 
@@ -40,10 +36,8 @@ public class HospitalServiceImpl implements HospitalService {
     public Hospital create(HospitalRequest request) {
         String generatedCode;
         boolean isDuplicate;
-
-        // Vòng lặp: Nếu mã đã tồn tại thì sinh mã mới cho đến khi tìm được mã chưa tồn tại
         do {
-            int randomNum = (int)(Math.random() * 9000) + 1000; // Sinh số từ 1000 đến 9999
+            int randomNum = (int)(Math.random() * 9000) + 1000;
             generatedCode = "BV" + randomNum;
             isDuplicate = hospitalRepository.existsByCode(generatedCode);
         } while (isDuplicate);

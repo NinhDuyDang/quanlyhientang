@@ -42,8 +42,6 @@ public class PatientCaseServiceImpl implements PatientCaseService {
     public PatientCase create(PatientCaseRequest request) {
         Hospital hospital = hospitalRepository.findById(request.getHospitalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
-
-        // 1. Tự sinh mã ca bệnh ngẫu nhiên: CASE + 5 chữ số
         String generatedCaseCode;
         boolean isDuplicate;
         do {
@@ -55,7 +53,7 @@ public class PatientCaseServiceImpl implements PatientCaseService {
         // 2. Build đối tượng
         PatientCase patientCase = PatientCase.builder()
                 .caseCode(generatedCaseCode)
-                .patientName(request.getPatientName()) // Đã có tên bệnh nhân
+                .patientName(request.getPatientName())
                 .hospital(hospital)
                 .birthYear(request.getBirthYear())
                 .gender(Gender.valueOf(request.getGender().toUpperCase()))
@@ -77,10 +75,10 @@ public class PatientCaseServiceImpl implements PatientCaseService {
         Hospital hospital = hospitalRepository.findById(request.getHospitalId())
                 .orElseThrow(() -> new ResourceNotFoundException("Hospital not found"));
 
-        // THÊM DÒNG NÀY VÀO:
+
         patientCase.setPatientName(request.getPatientName());
 
-        // Các dòng còn lại giữ nguyên
+
         patientCase.setHospital(hospital);
         patientCase.setBirthYear(request.getBirthYear());
         patientCase.setGender(Gender.valueOf(request.getGender().toUpperCase()));

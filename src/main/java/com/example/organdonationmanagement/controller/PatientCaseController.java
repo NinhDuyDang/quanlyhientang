@@ -23,7 +23,7 @@ public class PatientCaseController {
 
     @GetMapping
     public String listPatients(
-            @RequestParam(defaultValue = "1") int page, // Thêm tham số page
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(required = false) Long hospitalId,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
