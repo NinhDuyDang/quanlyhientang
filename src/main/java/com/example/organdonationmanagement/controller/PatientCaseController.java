@@ -2,15 +2,21 @@ package com.example.organdonationmanagement.controller;
 
 import com.example.organdonationmanagement.dto.request.PatientCaseRequest;
 import com.example.organdonationmanagement.entity.PatientCase;
+import com.example.organdonationmanagement.entity.User;
+import com.example.organdonationmanagement.entity.enums.Role;
+import com.example.organdonationmanagement.exception.ResourceNotFoundException;
 import com.example.organdonationmanagement.repository.HospitalRepository;
 import com.example.organdonationmanagement.service.PatientCaseService;
+import com.example.organdonationmanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.time.LocalDate;
 
 @Controller
@@ -20,7 +26,8 @@ public class PatientCaseController {
 
     private final PatientCaseService patientCaseService;
     private final HospitalRepository hospitalRepository;
-
+    @Autowired
+    private UserService userService;
     @GetMapping
     public String listPatients(
             @RequestParam(defaultValue = "1") int page,
@@ -45,13 +52,19 @@ public class PatientCaseController {
 
         return "patient/list";
     }
+@GetMapping("/create")
+public String showCreateForm(Model model, Principal principal) {
+    User currentUser = userService.findByUsername(principal.getName())
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-    @GetMapping("/create")
-    public String showCreateForm(Model model) {
-        model.addAttribute("activeMenu", "patient");
+    model.addAttribute("activeMenu", "patient");
+    model.addAttribute("currentUser", currentUser);
+
+    if (currentUser.getRole() == Role.ADMIN) {
         model.addAttribute("hospitals", hospitalRepository.findAll());
-        return "patient/create";
     }
+    return "patient/create";
+}
 
     @PostMapping("/create")
     public String createPatient(@ModelAttribute PatientCaseRequest request) {
@@ -67,15 +80,16 @@ public class PatientCaseController {
         return "patient/edit";
     }
 
-    @PostMapping("/edit/{id}")
-    public String updatePatient(@PathVariable("id") Long id,
-                                @ModelAttribute("patient") PatientCaseRequest request) {
-        if (request.getStatus() == null) {
-            throw new IllegalArgumentException("Trạng thái không được để trống!");
-        }
-        patientCaseService.update(id, request);
-        return "redirect:/patient";
-    }
+@PostMapping("/edit/{id}")
+public String updatePatient(@PathVariable("id") Long id,
+                            @ModelAttribute("patient") PatientCaseRequest request,
+                            Principal principal) {
+    User currentUser = userService.findByUsername(principal.getName())
+            .orElseThrow(() -> new RuntimeException("Không tìm thấy user với username: " + principal.getName()));
+    patientCaseService.update(id, request, currentUser);
+
+    return "redirect:/patient";
+}
 
     @GetMapping("/delete/{id}")
     public String deletePatient(@PathVariable("id") Long id) {

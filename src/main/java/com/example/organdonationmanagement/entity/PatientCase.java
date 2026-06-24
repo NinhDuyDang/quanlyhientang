@@ -24,7 +24,7 @@ public class PatientCase {
 
     @Column(unique = true, nullable = false)
     private String caseCode;
-    @ManyToOne(fetch = FetchType.EAGER) // Dùng EAGER để chắc chắn load luôn Hospital
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
 
@@ -41,7 +41,8 @@ public class PatientCase {
 
     @Enumerated(EnumType.STRING)
     private DonorStatus donorStatus;
-
+    @Column(length = 50)
+    private String bloodtype;
     @Column(length = 1000)
     private String note;
     @Column(name = "patient_name", nullable = false)

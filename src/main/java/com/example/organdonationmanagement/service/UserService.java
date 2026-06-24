@@ -9,7 +9,6 @@ import java.util.Optional;
 public interface UserService {
     List<User> getAll();
     User getById(Long id);
-
     Optional<User> findByUsername(String username);
     void updateProfile(String username, ProfileUpdateRequest request);
     void toggleStatus(Long id);

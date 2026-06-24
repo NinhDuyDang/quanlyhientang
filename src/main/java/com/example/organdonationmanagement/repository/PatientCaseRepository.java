@@ -63,7 +63,6 @@ public interface PatientCaseRepository extends JpaRepository<PatientCase, Long>,
     boolean existsByCaseCode(String caseCode);
     long countByStatus(PatientStatus status);
     List<PatientCase> findByHospitalId(Long hospitalId);
-    // --- Giữ nguyên hàm này ---
     @Query("SELECT p FROM PatientCase p WHERE " +
             "(:hospitalId IS NULL OR p.hospital.id = :hospitalId) AND " +
             "(:status IS NULL OR p.status = :status) AND " +
@@ -75,8 +74,6 @@ public interface PatientCaseRepository extends JpaRepository<PatientCase, Long>,
             @Param("fromDate") LocalDate fromDate,
             @Param("toDate") LocalDate toDate,
             Pageable pageable);
-
-    // --- Các hàm thống kê cũ (giữ nguyên) ---
     @Query("SELECT p.hospital.name, COUNT(p) FROM PatientCase p GROUP BY p.hospital.name")
     List<Object[]> countCasesByHospital();
 
@@ -86,7 +83,6 @@ public interface PatientCaseRepository extends JpaRepository<PatientCase, Long>,
     @Query(value = "SELECT MONTH(created_at) as month, COUNT(id) as count FROM patient_cases WHERE YEAR(created_at) = 2026 GROUP BY MONTH(created_at)", nativeQuery = true)
     List<Object[]> countCasesByMonthInCurrentYear();
 
-    // --- BỔ SUNG: Các hàm thống kê theo Bệnh viện (Dành cho STAFF) ---
     @Query("SELECT p.status, COUNT(p) FROM PatientCase p WHERE p.hospital.id = :hospitalId GROUP BY p.status")
     List<Object[]> countCasesByStatusByHospital(@Param("hospitalId") Long hospitalId);
 

@@ -25,4 +25,6 @@ public class PatientCaseRequest {
     private String note;
 
     private LocalDate incidentDate;
+
+    private String bloodtype ;
 }

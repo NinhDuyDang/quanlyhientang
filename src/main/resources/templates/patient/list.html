@@ -1,3 +1,4 @@
+
 <!--<!DOCTYPE html>-->
 <!--<html xmlns:th="http://www.thymeleaf.org"-->
 <!--      th:replace="~{fragments/main-layout :: layout(~{:: .patient-content-block}, 'Danh sách ca bệnh', ~{:: .page-css}, ~{:: .page-js})}">-->
@@ -78,7 +79,15 @@
 <!--                              th:text="${pt.status != null ? (pt.status.name() == 'BRAIN_DEATH_1' ? 'Chết não lần 1' : (pt.status.name() == 'BRAIN_DEATH_2' ? 'Chết não lần 2' : 'Chết não lần 3')) : ''}">-->
 <!--                        </span>-->
 <!--                    </td>-->
-<!--                    <td th:text="${pt.donorStatus != null ? (pt.donorStatus.name() == 'POTENTIAL' ? 'Có khả năng' : 'Gia đình đồng ý') : ''}"></td>-->
+<!--                    <td>-->
+<!--                        <span th:switch="${pt.donorStatus != null ? pt.donorStatus.name() : ''}">-->
+<!--                            <span th:case="'POTENTIAL'">Có khả năng</span>-->
+<!--                            <span th:case="'FAMILY_ACCEPTED'">Gia đình đồng ý</span>-->
+<!--                            <span th:case="'FAMILY_REJECTED'">Gia đình từ chối</span>-->
+<!--                            <span th:case="'PENDING'">Đang chờ</span>-->
+<!--                            <span th:case="*">N/A</span>-->
+<!--                        </span>-->
+<!--                    </td>-->
 <!--                    <td th:text="${pt.incidentDate}"></td>-->
 <!--                    <td class="text-center">-->
 <!--                        <div class="d-flex justify-content-center gap-2">-->
@@ -132,7 +141,6 @@
 <!--</th:block>-->
 <!--</body>-->
 <!--</html>-->
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/main-layout :: layout(~{:: .patient-content-block}, 'Danh sách ca bệnh', ~{:: .page-css}, ~{:: .page-js})}">
@@ -192,6 +200,7 @@
                     <th>Bệnh viện</th>
                     <th>Tuổi</th>
                     <th>Giới tính</th>
+                    <th>Nhóm máu</th>
                     <th>Nguyên nhân</th>
                     <th>Trạng thái</th>
                     <th>Khả năng hiến</th>
@@ -206,6 +215,8 @@
                     <td th:text="${pt.hospital != null ? pt.hospital.name : 'N/A'}"></td>
                     <td th:text="${pt.birthYear}"></td>
                     <td th:text="${pt.gender != null ? (pt.gender.name() == 'MALE' ? 'Nam' : 'Nữ') : ''}"></td>
+                    <td th:text="${pt.bloodtype != null ? pt.bloodtype : 'N/A'}"></td>
+
                     <td th:text="${pt.cause != null ? (pt.cause.name() == 'TRAFFIC_ACCIDENT' ? 'Tai nạn GT' : (pt.cause.name() == 'STROKE' ? 'Đột quỵ' : 'Chấn thương sọ não')) : ''}"></td>
                     <td>
                         <span class="badge-status"

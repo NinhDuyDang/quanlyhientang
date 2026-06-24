@@ -24,6 +24,7 @@ package com.example.organdonationmanagement.service;
 
 import com.example.organdonationmanagement.dto.request.PatientCaseRequest;
 import com.example.organdonationmanagement.entity.PatientCase;
+import com.example.organdonationmanagement.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.lang.Nullable;
 
@@ -34,8 +35,9 @@ public interface PatientCaseService {
     List<PatientCase> getAll();
     PatientCase getById(Long id);
     PatientCase create(PatientCaseRequest request);
-    PatientCase update(Long id, PatientCaseRequest request);
+//    PatientCase update(Long id, PatientCaseRequest request);
     void delete(Long id);
+    PatientCase update(Long id, PatientCaseRequest request, User currentUser);
     List<PatientCase> search(@Nullable Long hospitalId, String status, LocalDate fromDate, LocalDate toDate);
     Page<PatientCase> findPatients(@Nullable Long hospitalId, String status, LocalDate fromDate, LocalDate toDate, int page, int size);
 }
