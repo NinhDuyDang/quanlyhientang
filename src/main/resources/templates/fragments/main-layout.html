@@ -1,68 +1,215 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org"-->
-<!--      xmlns:sec="http://www.thymeleaf.org/extras/spring-security6"-->
-<!--      th:fragment="layout(content, title, specific_head, specific_js)">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title th:text="${title} + ' - Hệ thống quản lý'"></title>-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">-->
-<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">-->
-<!--    <link rel="stylesheet" th:href="@{/css/common.css}">-->
-<!--    <th:block th:replace="${specific_head}"></th:block>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="wrapper" style="display: flex; min-height: 100vh;">-->
-<!--    <div th:replace="~{fragments/sidebar :: sidebar}"></div>-->
-<!--    <div class="content" style="flex: 1; display: flex; flex-direction: column; padding: 20px; background-color: #f8f9fa;">-->
-<!--        <div th:replace="~{fragments/header :: header(${title})}"></div>-->
-<!--        <main style="flex: 1;">-->
-<!--            <th:block th:replace="${content}"></th:block>-->
-<!--        </main>-->
-<!--&lt;!&ndash;        <div th:replace="~{fragments/footer :: footer}"></div>&ndash;&gt;-->
-<!--    </div>-->
-<!--</div>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
-<!--<th:block th:replace="${specific_js}"></th:block>-->
-<!--</body>-->
-<!--</html>-->
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security6"
       th:fragment="layout(content, title, specific_head, specific_js)">
 <head>
     <meta charset="UTF-8">
+    <!-- Đảm bảo CSRF token được render vào đây -->
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
     <title th:text="${title} + ' - Hệ thống quản lý'"></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <th:block th:replace="${specific_head}"></th:block>
+
+    <style>
+        #chat-bubble { position: fixed; bottom: 30px; right: 30px; z-index: 9999; cursor: pointer; }
+        #chat-popup {
+            display: none; position: fixed; bottom: 80px; right: 20px; width: 750px; height: 500px;
+            background: white; border: 1px solid #ccc; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 9999; flex-direction: row; overflow: hidden;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper" style="display: flex; min-height: 100vh;">
     <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
     <div class="content" style="flex: 1; display: flex; flex-direction: column; padding: 20px; background-color: #f8f9fa; position: relative;">
-
-        <div class="copyright-watermark">
-            © 2026 Bản quyền bởi NinhDang
-        </div>
-
+<!--        <div class="copyright-watermark">© 2026 Bản quyền bởi NinhDang</div>-->
         <div th:replace="~{fragments/header :: header(${title})}"></div>
         <main style="flex: 1;">
             <th:block th:replace="${content}"></th:block>
         </main>
     </div>
 </div>
+
+<div id="chat-bubble">
+    <button class="btn btn-primary rounded-circle shadow" style="width: 60px; height: 60px; font-size: 24px;">
+        <i class="bi bi-chat-dots-fill"></i>
+    </button>
+</div>
+
+<div id="chat-popup">
+    <div style="width: 300px; border-right: 1px solid #eee; display: flex; flex-direction: column;">
+        <div style="padding: 15px; font-weight: bold; border-bottom: 1px solid #eee;">Hỗ Trợ Trực Tuyến</div>
+        <div style="padding: 10px;"><input type="text" class="form-control" placeholder="Tìm kiếm người nhắn..."></div>
+        <div id="user-list" style="flex: 1; overflow-y: auto;"></div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column;">
+        <div style="padding: 10px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between;">
+            <strong id="chat-title">Chọn người để chat</strong>
+            <button id="close-chat" style="border:none; background:none; cursor:pointer;">X</button>
+        </div>
+        <div id="chat-messages" style="flex: 1; padding: 15px; overflow-y: auto; background: #fafafa;"></div>
+        <div style="padding: 10px; border-top: 1px solid #eee; display: flex; gap: 5px;">
+            <input type="text" id="chat-input" class="form-control" placeholder="Nhập tin nhắn...">
+            <button id="btn-send-chat" class="btn btn-primary">Gửi</button>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<script th:inline="javascript">
+    const currentUser = [[${#authentication.name}]];
+    // Lấy CSRF an toàn, tránh lỗi null khi trang không có thẻ meta
+    const csrfMeta = document.querySelector("meta[name='_csrf']");
+    const csrfHeaderMeta = document.querySelector("meta[name='_csrf_header']");
+    const csrfToken = csrfMeta ? csrfMeta.getAttribute("content") : null;
+    const csrfHeader = csrfHeaderMeta ? csrfHeaderMeta.getAttribute("content") : null;
+
+    let currentConvId = null;
+    const chatBubble = document.getElementById('chat-bubble');
+    const chatPopup = document.getElementById('chat-popup');
+    const closeChat = document.getElementById('close-chat');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatInput = document.getElementById('chat-input');
+    const userList = document.getElementById('user-list');
+
+    let stompClient = null;
+    let currentSubscription = null;
+
+    // Hàm tiện ích để gửi fetch kèm CSRF
+    function secureFetch(url, options = {}) {
+        options.headers = options.headers || {};
+        if (csrfHeader && csrfToken) {
+            options.headers[csrfHeader] = csrfToken;
+        }
+        return fetch(url, options);
+    }
+
+    function connect() {
+        const socket = new SockJS('/ws-chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, () => {
+            subscribeToTopic('/topic/messages/' + currentUser);
+        });
+    }
+
+    function subscribeToTopic(topic) {
+        if (currentSubscription) currentSubscription.unsubscribe();
+        currentSubscription = stompClient.subscribe(topic, (payload) => {
+            appendMessage(JSON.parse(payload.body));
+        });
+    }
+
+    function loadConversations() {
+        secureFetch('/api/chat/conversations')
+            .then(res => res.json())
+            .then(data => {
+                userList.innerHTML = data.map(item => `
+                <div oncontextmenu="showContextMenu(event, '${item.username}')"
+                     onclick="selectConversation('${item.username}', '${item.fullName.replace(/'/g, "\\'")}')"
+                     style="padding:10px; cursor:pointer; border-bottom:1px solid #eee; display:flex; align-items:center;">
+                    <i class="bi bi-person-circle" style="font-size: 30px; color: #0d6efd; margin-right: 10px;"></i>
+                    ${item.fullName}
+                </div>
+            `).join('');
+            });
+    }
+
+    // function selectConversation(username, fullName) {
+    //     currentConvId = username;
+    //     let title = (username === 'admin') ? "Quản trị viên" : fullName;
+    //     document.getElementById('chat-title').innerText = "Đang chat với: " + title;
+    //
+    //     chatMessages.innerHTML = '';
+    //     subscribeToTopic('/topic/messages/' + username);
+    //     secureFetch('/api/chat/history/' + username)
+    //         .then(res => res.json())
+    //         .then(messages => messages.forEach(msg => appendMessage(msg)));
+    // }
+    function selectConversation(username, fullName) {
+        // 1. Cập nhật ID cuộc hội thoại
+        currentConvId = username;
+
+        // 2. Cập nhật tiêu đề trực tiếp từ fullName (đã được Backend xử lý đúng)
+        // Backend đã trả về displayName của đối tác (Admin nếu bạn là User, User nếu bạn là Admin)
+        document.getElementById('chat-title').innerText = "Đang chat với: " + fullName;
+
+        // 3. Xóa tin nhắn cũ và tải lại lịch sử
+        chatMessages.innerHTML = '';
+
+        // Subscribe vào topic theo username của đối tác
+        subscribeToTopic('/topic/messages/' + username);
+
+        secureFetch('/api/chat/history/' + username)
+            .then(res => res.json())
+            .then(messages => {
+                messages.forEach(msg => appendMessage(msg));
+            })
+            .catch(err => console.error("Lỗi tải lịch sử chat:", err));
+    }
+    function sendMessage() {
+        const content = chatInput.value.trim();
+        if (!content || !currentConvId) return;
+        stompClient.send("/app/chat.send", {}, JSON.stringify({
+            'content': content,
+            'conversationId': currentConvId
+        }));
+        chatInput.value = '';
+    }
+
+    function appendMessage(msg) {
+        const isOwner = msg.sender === currentUser;
+        const senderDisplay = isOwner ? 'Tôi' : (msg.senderFullName || msg.sender);
+        const div = document.createElement('div');
+        div.id = 'msg-' + msg.id;
+        div.style.marginBottom = "15px";
+        div.style.textAlign = isOwner ? "right" : "left";
+
+        div.innerHTML = `
+        <div style="display:flex; justify-content: ${isOwner ? 'flex-end' : 'flex-start'}; align-items:center; margin-bottom:2px;">
+            ${!isOwner ? `<i class="bi bi-person-circle" style="font-size: 25px; color: #6c757d; margin-right: 5px;"></i>` : ''}
+            <small style="font-weight: bold; color: #555;">${senderDisplay}</small>
+        </div>
+        <div style="background:${isOwner ? '#0d6efd' : '#e9ecef'}; color:${isOwner ? 'white' : 'black'}; padding:8px; border-radius:10px; display:inline-block; position:relative;">
+            ${msg.content}
+            ${isOwner ? `<button onclick="deleteMessage(${msg.id})" style="border:none; background:none; color:white; margin-left:10px; cursor:pointer;">&times;</button>` : ''}
+        </div>
+    `;
+        chatMessages.appendChild(div);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function showContextMenu(e, username) {
+        e.preventDefault();
+        if (!confirm("Xóa toàn bộ lịch sử với " + username + "?")) return;
+        secureFetch('/api/chat/delete-all/' + username, { method: 'DELETE' })
+            .then(res => { if(res.ok) { chatMessages.innerHTML = ''; loadConversations(); } else { alert("Không có quyền xóa!"); } });
+    }
+
+    function deleteMessage(id) {
+        if (!confirm("Xóa tin nhắn này?")) return;
+        secureFetch('/api/chat/delete/' + id, { method: 'DELETE' })
+            .then(res => {
+                if(res.ok) document.getElementById('msg-' + id).remove();
+                else alert("Lỗi xóa tin nhắn (403)");
+            });
+    }
+
+    chatBubble.addEventListener('click', () => { chatPopup.style.display = 'flex'; loadConversations(); });
+    closeChat.addEventListener('click', () => { chatPopup.style.display = 'none'; });
+    document.getElementById('btn-send-chat').addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+    connect();
+</script>
 <th:block th:replace="${specific_js}"></th:block>
 </body>
 </html>

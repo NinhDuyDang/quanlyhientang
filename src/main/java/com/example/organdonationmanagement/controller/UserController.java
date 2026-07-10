@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -40,60 +41,60 @@ public class UserController {
         return "account/create";
     }
 
-//    @PostMapping("/account/create")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-//    public String processCreateUser(@ModelAttribute("userRequest") UserRequest request) {
-//        userService.create(request);
-//        return "redirect:/account";
-//    }
 
     @PostMapping("/account/create")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String processCreateUser(@ModelAttribute("userRequest") UserRequest request) {
-        // Chỉ cần thêm logic kiểm tra này
+    public String processCreateUser(@ModelAttribute("userRequest") UserRequest request, RedirectAttributes redirectAttributes) {
+
+        if ("STAFF".equals(request.getRole()) && request.getHospitalId() == null) {
+            redirectAttributes.addFlashAttribute("error", "Vui lòng chọn bệnh viện cho nhân viên!");
+            redirectAttributes.addFlashAttribute("showHospitalError", true);
+            return "redirect:/account/create";
+        }
+
         if ("ADMIN".equals(request.getRole())) {
             request.setHospitalId(null);
         }
+
         userService.create(request);
         return "redirect:/account";
     }
 
     @GetMapping("/account/edit/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String showEditForm(@PathVariable("id") Long id, Model model) {
+    public String showEditForm(@PathVariable("id") UUID id, Model model) {
         model.addAttribute("user", userService.getById(id));
         model.addAttribute("hospitals", hospitalService.findAll());
         model.addAttribute("activeMenu", "account");
         return "account/edit";
     }
 
-//    @PostMapping("/account/edit/{id}")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-//    public String processEditUser(@PathVariable("id") Long id, @ModelAttribute("userRequest") UserRequest request) {
-//        userService.update(id, request);
-//        return "redirect:/account";
-//    }
-@PostMapping("/account/edit/{id}")
-@PreAuthorize("hasAuthority('ROLE_ADMIN')")
-public String processEditUser(@PathVariable("id") Long id, @ModelAttribute("userRequest") UserRequest request) {
-    // Chỉ cần thêm logic kiểm tra này
-    if ("ADMIN".equals(request.getRole())) {
-        request.setHospitalId(null);
+    @PostMapping("/account/edit/{id}")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public String processEditUser(@PathVariable("id") UUID id,
+                                  @ModelAttribute("userRequest") UserRequest request,
+                                  RedirectAttributes redirectAttributes) { // Thêm RedirectAttributes
+        if ("STAFF".equals(request.getRole()) && request.getHospitalId() == null) {
+            redirectAttributes.addFlashAttribute("error", "Bạn phải chọn bệnh viện cho nhân viên STAFF!");
+            return "redirect:/account/edit/" + id; // Quay lại trang edit
+        }
+        if ("ADMIN".equals(request.getRole())) {
+            request.setHospitalId(null);
+        }
+        userService.update(id, request);
+        return "redirect:/account";
     }
-    userService.update(id, request);
-    return "redirect:/account";
-}
 
     @PostMapping("/account/toggle-status/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String toggleUserStatus(@PathVariable("id") Long id) {
+    public String toggleUserStatus(@PathVariable("id") UUID id) {
         userService.toggleStatus(id);
         return "redirect:/account";
     }
 
     @PostMapping("/account/delete/{id}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String deleteUser(@PathVariable("id") Long id) {
+    public String deleteUser(@PathVariable("id") UUID id) {
         userService.delete(id);
         return "redirect:/account";
     }

@@ -30,16 +30,16 @@
 
 <!--                <div class="col-md-6">-->
 <!--                    <label class="form-label form-label-custom">Vai trò hệ thống <span class="text-danger">*</span></label>-->
-<!--                    <select th:field="*{role}" name="role" class="form-select form-control-custom" required>-->
+<!--                    <select th:field="*{role}" id="roleSelect" name="role" class="form-select form-control-custom" required>-->
 <!--                        <option value="ADMIN">ADMIN - Ban quản trị trung tâm</option>-->
 <!--                        <option value="STAFF">STAFF - Điều phối viên bệnh viện</option>-->
 <!--                    </select>-->
 <!--                </div>-->
 
-<!--                <div class="col-md-6">-->
+<!--                <div class="col-md-6" id="hospitalField">-->
 <!--                    <label class="form-label form-label-custom">Bệnh viện liên kết</label>-->
 <!--                    <select th:field="*{hospitalId}" name="hospitalId" class="form-select form-control-custom">-->
-<!--                        <option value="">&#45;&#45; Chọn bệnh viện (Nếu là Staff) &#45;&#45;</option>-->
+<!--                        <option value="">&#45;&#45; Chọn bệnh viện ( nếu là  Staff ) &#45;&#45;</option>-->
 <!--                        <option th:each="h : ${hospitals}" th:value="${h.id}" th:text="${h.name}">Bệnh viện</option>-->
 <!--                    </select>-->
 <!--                </div>-->
@@ -54,11 +54,46 @@
 <!--        </form>-->
 <!--    </div>-->
 <!--</div>-->
+<!--<script>-->
+<!--    document.addEventListener('DOMContentLoaded', function () {-->
+<!--        const form = document.getElementById('createAccountForm');-->
+<!--        const roleSelect = document.getElementById('roleSelect');-->
+<!--        const hospitalSelect = document.getElementById('hospitalSelect');-->
+<!--        const hospitalError = document.getElementById('hospitalError');-->
+
+<!--        form.addEventListener('submit', function (event) {-->
+<!--            // Chỉ kiểm tra nếu là STAFF-->
+<!--            if (roleSelect.value === 'STAFF') {-->
+<!--                if (!hospitalSelect.value) {-->
+<!--                    event.preventDefault();-->
+
+<!--                    // Bôi đỏ viền-->
+<!--                    hospitalSelect.classList.add('is-invalid');-->
+<!--                    hospitalError.style.display = 'block';-->
+<!--                    return false;-->
+<!--                }-->
+<!--            }-->
+<!--        });-->
+<!--        hospitalSelect.addEventListener('change', function () {-->
+<!--            if (this.value) {-->
+<!--                this.classList.remove('is-invalid');-->
+<!--                hospitalError.style.display = 'none';-->
+<!--            }-->
+<!--        });-->
+<!--        roleSelect.addEventListener('change', function() {-->
+<!--            const hospitalField = document.getElementById('hospitalField');-->
+<!--            if (this.value === 'ADMIN') {-->
+<!--                hospitalField.style.display = 'none';-->
+<!--                hospitalSelect.value = "";-->
+<!--            } else {-->
+<!--                hospitalField.style.display = 'block';-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 
 <!--</body>-->
 <!--</html>-->
-
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{fragments/main-layout :: layout(~{:: .account-create-block}, 'Thêm tài khoản mới', ~{:: .page-css}, ~{})}">
@@ -77,7 +112,7 @@
     </div>
 
     <div class="card form-container-card">
-        <form th:action="@{/account/create}" method="POST" th:object="${userRequest}">
+        <form th:action="@{/account/create}" method="POST" th:object="${userRequest}" id="createAccountForm">
             <div class="row g-4">
                 <div class="col-md-6">
                     <label class="form-label form-label-custom">Tên đăng nhập <span class="text-danger">*</span></label>
@@ -99,10 +134,13 @@
 
                 <div class="col-md-6" id="hospitalField">
                     <label class="form-label form-label-custom">Bệnh viện liên kết</label>
-                    <select th:field="*{hospitalId}" name="hospitalId" class="form-select form-control-custom">
-                        <option value="">-- Chọn bệnh viện ( nếu là  Staff ) --</option>
+                    <select th:field="*{hospitalId}" id="hospitalSelect" name="hospitalId" class="form-select form-control-custom">
+                        <option value="">-- Chọn bệnh viện ( nếu là Staff ) --</option>
                         <option th:each="h : ${hospitals}" th:value="${h.id}" th:text="${h.name}">Bệnh viện</option>
                     </select>
+                    <div id="hospitalError" class="invalid-feedback" style="display: none;">
+                        Vui lòng chọn bệnh viện cho nhân viên!
+                    </div>
                 </div>
             </div>
 
@@ -118,24 +156,51 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('createAccountForm');
         const roleSelect = document.getElementById('roleSelect');
+        const hospitalSelect = document.getElementById('hospitalSelect');
+        const hospitalError = document.getElementById('hospitalError');
         const hospitalField = document.getElementById('hospitalField');
-        const hospitalSelect = hospitalField.querySelector('select');
 
-        function toggleHospitalField() {
-            if (roleSelect.value === 'ADMIN') {
+        // Logic chặn submit nếu là STAFF mà chưa chọn bệnh viện
+        form.addEventListener('submit', function (event) {
+            if (roleSelect.value === 'STAFF') {
+                if (!hospitalSelect.value || hospitalSelect.value === "") {
+                    event.preventDefault();
+                    hospitalSelect.classList.add('is-invalid');
+                    hospitalError.style.display = 'block';
+                    return false;
+                }
+            }
+        });
+
+        // Xóa báo lỗi khi chọn lại
+        hospitalSelect.addEventListener('change', function () {
+            if (this.value) {
+                this.classList.remove('is-invalid');
+                hospitalError.style.display = 'none';
+            }
+        });
+
+        // Toggle ẩn hiện bệnh viện
+        roleSelect.addEventListener('change', function() {
+            if (this.value === 'ADMIN') {
                 hospitalField.style.display = 'none';
-                hospitalSelect.value = ""; // Đặt về rỗng khi ẩn để không gửi dữ liệu rác
+                hospitalSelect.value = "";
+                hospitalSelect.classList.remove('is-invalid');
+                hospitalError.style.display = 'none';
             } else {
                 hospitalField.style.display = 'block';
             }
-        }
+        });
 
-        roleSelect.addEventListener('change', toggleHospitalField);
-        // Chạy ngay khi tải trang để kiểm tra giá trị mặc định
-        toggleHospitalField();
+        // Chạy khởi tạo trạng thái ban đầu
+        if (roleSelect.value === 'ADMIN') {
+            hospitalField.style.display = 'none';
+        }
     });
 </script>
 
 </body>
 </html>
+

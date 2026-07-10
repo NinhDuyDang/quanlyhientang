@@ -37,7 +37,11 @@
                 </thead>
                 <tbody>
                 <tr th:each="u : ${users}">
-                    <td class="text-secondary" th:text="${u.id}">1</td>
+                    <td class="text-secondary"
+                        th:text="${#strings.substring(u.id, 0, 8) + '...'}"
+                        th:title="${u.id}"
+                        style="cursor: help;">
+                    </td>
 
                     <td class="text-username-custom"
                         th:text="${u.username}">

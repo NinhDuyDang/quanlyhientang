@@ -57,7 +57,8 @@ public class SecurityConfig {
 
                         .requestMatchers("/account/**")
                         .hasAuthority("ROLE_ADMIN")
-
+                        .requestMatchers("/api/chat/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/profile/**")
                         .hasAnyAuthority("ROLE_ADMIN", "ROLE_STAFF")
 

@@ -3,8 +3,10 @@ package com.example.organdonationmanagement.entity;
 import com.example.organdonationmanagement.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.UuidGenerator; // Sử dụng chuẩn mới thay cho GenericGenerator
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -14,15 +16,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class User {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @UuidGenerator
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(unique = true, nullable = false)
     private String username;
 
     @Column(nullable = false)
     private String password;
+
     private boolean enabled = true;
 
     @Enumerated(EnumType.STRING)
@@ -33,17 +38,17 @@ public class User {
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
 
-
-
     private String fullName;
     private Integer age;
     private String phoneNumber;
     private String workAddress;
     private String avatarUrl;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @PrePersist
     public void prePersist() {
-        createdAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 }

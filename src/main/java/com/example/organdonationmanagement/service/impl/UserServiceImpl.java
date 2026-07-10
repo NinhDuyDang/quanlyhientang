@@ -36,58 +36,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Long id) {
+    public User getById(UUID id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
     }
-
-//    @Override
-//    public User create(UserRequest request) {
-//        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-//            throw new RuntimeException("Tên đăng nhập '" + request.getUsername() + "' đã tồn tại!");
-//        }
-//
-//        Hospital hospital = null;
-//        if (request.getHospitalId() != null) {
-//            hospital = hospitalRepository.findById(request.getHospitalId())
-//                    .orElseThrow(() -> new RuntimeException("Hospital not found"));
-//        }
-//
-//        User user = User.builder()
-//                .username(request.getUsername())
-//                .password(passwordEncoder.encode(request.getPassword()))
-//                .role(Role.valueOf(request.getRole()))
-//                .hospital(hospital)
-//                .enabled(true)
-//                .build();
-//
-//        return userRepository.save(user);
-//    }
-//
-//    @Override
-//    public User update(Long id, UserRequest request) {
-//        User user = getById(id);
-//        Hospital hospital = null;
-//        if (request.getHospitalId() != null) {
-//            hospital = hospitalRepository.findById(request.getHospitalId())
-//                    .orElseThrow(() -> new RuntimeException("Hospital not found"));
-//        }
-//
-//        Optional<User> existedUser = userRepository.findByUsername(request.getUsername());
-//        if (existedUser.isPresent() && !existedUser.get().getId().equals(id)) {
-//            throw new RuntimeException("Tên đăng nhập '" + request.getUsername() + "' đã tồn tại!");
-//        }
-//
-//        user.setUsername(request.getUsername());
-//        if (request.getPassword() != null && !request.getPassword().isBlank()) {
-//            user.setPassword(passwordEncoder.encode(request.getPassword()));
-//        }
-//
-//        user.setRole(Role.valueOf(request.getRole()));
-//        user.setHospital(hospital);
-//
-//        return userRepository.save(user);
-//    }
 
     @Override
     public User create(UserRequest request) {
@@ -114,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(Long id, UserRequest request) {
+    public User update(UUID id, UserRequest request) {
         User user = getById(id);
         Hospital hospital = null;
 
@@ -141,7 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(Long id) {
+    public void delete(UUID id) {
         userRepository.delete(getById(id));
     }
 
@@ -168,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void toggleStatus(Long id) {
+    public void toggleStatus(UUID id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy người dùng với ID: " + id));
         user.setEnabled(!user.isEnabled());
